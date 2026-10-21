@@ -1,6 +1,6 @@
 /**** util-type.js Type ****/
 //==============================================================
-import ExtendError      from './extend-error.js';
+import { createError } from './error-factory.js';
  
 var _global = globalThis;
 var OLD_ENV = _global.OLD_ENV ? _global.OLD_ENV : false;    // 커버리지 테스트 역활
@@ -244,9 +244,9 @@ function _parseFunc(funBody) {
     try {
         if (syntax1.test(funBody)) arrFunc = regFunc1.exec(funBody);
         else if (syntax2.test(funBody)) arrFunc = regFunc2.exec(funBody);
-        else throw new ExtendError(/EL01301/, null, [funBody]);
+        else throw createError('EL01301', [funBody]);
         
-        if (arrFunc === null) throw new ExtendError(/EL01302/, null, [funBody]);
+        if (arrFunc === null) throw createError('EL01302', [funBody]);
 
         arrParam = (new Function('return ['+ arrFunc[1] +']'))();
         result['params'] = arrParam;
@@ -255,7 +255,7 @@ function _parseFunc(funBody) {
         result['return'] = arrRetrun;
 
     } catch (error) {
-        throw new ExtendError(/EL01303/, error, ['']);
+        throw createError('EL01303', [''], { cause: error });
     }
 
     return result;
@@ -428,7 +428,7 @@ function getTypes(ctor, hasUnion) {
 
     hasUnion = hasUnion === false ? false : true;
     
-    if (typeof ctor !== 'function') throw new ExtendError(/EL0130C/, null, [typeof ctor]);
+    if (typeof ctor !== 'function') throw createError('EL0130C', [typeof ctor]);
 
     arr.push(ctor);
     proto = $getPrototype(ctor);        
@@ -634,13 +634,13 @@ function extendType(target) {
         if (target['func']) obj['func'] = target['func'];
         if (target['params']) obj['params'] = target['params'];
         if (target['return']) obj['return'] = target['return'];
-        if (!_hasType(obj['$type'])) throw new ExtendError(/EL01304/, null, [obj['$type']]);
+        if (!_hasType(obj['$type'])) throw createError('EL01304', [obj['$type']]);
         if (obj['$type'] === 'array') {
             obj['kind'] = obj['kind'] || '_ALL_';
-            if (!_hasKindArray(obj['kind'])) throw new ExtendError(/EL01305/, null, [obj['kind']]);
+            if (!_hasKindArray(obj['kind'])) throw createError('EL01305', [obj['kind']]);
         }
         if (obj['$type'] === 'choice') {
-            if (!_hasKindChoice(obj['kind'])) throw new ExtendError(/EL01306/, null, [obj['kind']]);
+            if (!_hasKindChoice(obj['kind'])) throw createError('EL01306', [obj['kind']]);
         }
         return obj;
     } else {
@@ -729,8 +729,8 @@ function extendType(target) {
         }
         if (!obj['kind']) obj['kind'] = '_OPT_';
         // kind 검사
-        if (obj['$type'] === 'array' && !_hasKindArray(obj['kind'])) throw new ExtendError(/EL01307/, null, [obj['kind']]);
-        if (obj['$type'] === 'choice' && !_hasKindChoice(obj['kind'])) throw new ExtendError(/EL01308/, null, [obj['kind']]);
+        if (obj['$type'] === 'array' && !_hasKindArray(obj['kind'])) throw createError('EL01307', [obj['kind']]);
+        if (obj['$type'] === 'choice' && !_hasKindChoice(obj['kind'])) throw createError('EL01308', [obj['kind']]);
 
     // step : object
     } else if (_isFillObj(target) || _isEmptyObj(target)) {
@@ -770,14 +770,14 @@ function _execAllow(extType, tarType, opt, pathName) {
     if (eType['kind']) {
         if ((eType['kind'] === '_SEQ_' || eType['kind'] === '_OPT_' || eType['kind'] === '_REQ_' || eType['kind'] === '_EUM_'|| eType['kind'] === '_DEF_') 
         && eType['list'].length === 0) {
-            throw new ExtendError(/EL01201/, prop, ['extType', sExt]);
+            throw createError('EL01201', ['extType', sExt], { prop });
         }
     }
     // tarType seq, opt 필수 검사
     if (tType['kind']) {
         if ((tType['kind'] === '_SEQ_' || tType['kind'] === '_OPT_' || tType['kind'] === '_REQ_'  || tType['kind'] === '_EUM_'|| tType['kind'] === '_DEF_') 
         && tType['list'].length === 0) {
-            throw new ExtendError(/EL01201/, prop, ['tarType', sTar]);
+            throw createError('EL01201', ['tarType', sTar], { prop });
         }
     }
     //  원본은 초이스가 아니고, tarType choice 의 인 경우
@@ -789,20 +789,20 @@ function _execAllow(extType, tarType, opt, pathName) {
     // check allow type
     if (_isLeafType(eType['$type'])) {
         if(typeof eType['default'] !== 'undefined' && eType['default'] !== null && !_equalLiternal(eType['default'], tType['default'])) {
-            throw new ExtendError(/EL01202/, prop, [eType['$type'], eType, tType]);
+            throw createError('EL01202', [eType['$type'], eType, tType], { prop });
         }
-        if (eType['$type'] !== tType['$type']) throw new ExtendError(/EL01203/, prop, [eType['$type'], tType['$type']]);
+        if (eType['$type'] !== tType['$type']) throw createError('EL01203', [eType['$type'], tType['$type']], { prop });
     
     } else if (eType['$type'] === 'array')  $arrayAllow();
     else if (eType['$type'] === 'choice') $choiceAllow();
     else if (eType['$type'] === 'class') $classAllow();
     else if (eType['$type'] === 'union') $unionAllow();
     else if (eType['$type'] === 'function') $functionAllow();
-    else throw new ExtendError(/EL01204/, prop, []);
+    else throw createError('EL01204', [], { prop });
 
     // inner function
     function $arrayAllow() {
-        if (tType['$type'] !== 'array' || !Array.isArray(tType['list'])) throw new ExtendError(/EL01211/, prop, [tType['$type']]);
+        if (tType['$type'] !== 'array' || !Array.isArray(tType['list'])) throw createError('EL01211', [tType['$type']], { prop });
         
         // _ALL_ (all)
         if (eType['kind'] === '_ALL_') {
@@ -812,15 +812,15 @@ function _execAllow(extType, tarType, opt, pathName) {
         } else if (eType['kind'] === '_ANY_') {
             if (tType['kind'] === '_ANY_') return;
             if (tType['kind'] === '_ALL_' || tType['kind'] === '_OPT_') {
-                throw new ExtendError(/EL01212/, prop, [sTar]);
+                throw createError('EL01212', [sTar], { prop });
             }
             return;
 
         // _SEQ_ (sequence)
         } else if (eType['kind'] === '_SEQ_') {
-            if (eType['kind'] !== tType['kind'])  throw new ExtendError(/EL01213/, prop, [tType]);
+            if (eType['kind'] !== tType['kind'])  throw createError('EL01213', [tType], { prop });
             if (eType['list'].length > tType['list'].length) {
-                throw new ExtendError(/EL01214/, prop, [eType.list.length, tType.list.length]);
+                throw createError('EL01214', [eType.list.length, tType.list.length], { prop });
             }
 
             // element check
@@ -828,7 +828,7 @@ function _execAllow(extType, tarType, opt, pathName) {
                 try {
                     _execAllow(eType['list'][i], tType['list'][i], opt, pathName);
                 } catch (error) {
-                    throw new ExtendError(/EL01215/, error, [i]);
+                    throw createError('EL01215', [i], { cause: error });
                 }
             }
             return;
@@ -836,18 +836,18 @@ function _execAllow(extType, tarType, opt, pathName) {
         // _REQ_ (require)
         } else if (eType['kind'] === '_REQ_') {
             if (tType['kind'] === '_ALL_' || tType['kind'] === '_ANY_' || tType['kind'] === '_OPT_') {
-                throw new ExtendError(/EL01216/, prop, [eType['$type'], sTar]);
+                throw createError('EL01216', [eType['$type'], sTar], { prop });
             }
 
         // _OPT_ (option)
         } else if (eType['kind'] === '_OPT_') {
             if (tType['kind'] === '_ALL_' || tType['kind'] === '_ANY_' ) {
-                throw new ExtendError(/EL01217/, prop, [eType['$type'], sTar]);
+                throw createError('EL01217', [eType['$type'], sTar], { prop });
             }
         
         // _ETC_
         } else {
-            throw new ExtendError(/EL01218/, prop, [eType['kind']]);
+            throw createError('EL01218', [eType['kind']], { prop });
         }
 
         // element check
@@ -867,7 +867,7 @@ function _execAllow(extType, tarType, opt, pathName) {
                     continue;
                 }
             }
-            if (!success) throw new ExtendError(/EL01219/, prop, [eType, tType]);
+            if (!success) throw createError('EL01219', [eType, tType], { prop });
         }
     }
 
@@ -875,15 +875,15 @@ function _execAllow(extType, tarType, opt, pathName) {
         // _ALL_ (all)
         if (eType['kind'] === '_ALL_') {
             if (tType['$type'] === tType['$type'] && tType['kind'] === '_ERR_') {
-                throw new ExtendError(/EL01221/, prop, [eType['$type'], sTar]);
+                throw createError('EL01221', [eType['$type'], sTar], { prop });
             }
             return;
 
         // _ANY_ (any)
         } else if (eType['kind'] === '_ANY_') {
-            if (tType['$type'] === 'undefined') throw new ExtendError(/EL01222/, prop, ['_ANY_', 'undefined']);
+            if (tType['$type'] === 'undefined') throw createError('EL01222', ['_ANY_', 'undefined'], { prop });
             if (eType['$type'] === tType['$type'] && (tType['kind'] === '_ALL_' || tType['kind'] === '_OPT_' || tType['kind'] === '_ERR_' || tType['kind'] === '_NON_')) {
-                throw new ExtendError(/EL01223/, prop, [sTar]);
+                throw createError('EL01223', [sTar], { prop });
             }
             return;
         
@@ -891,7 +891,7 @@ function _execAllow(extType, tarType, opt, pathName) {
         } else if  (eType['kind'] === '_NON_') {
             if (eType['$type'] !== tType['$type'] || eType['kind'] !== tType['kind']) {
                 // 4
-                throw new ExtendError(/EL01224/, prop, [sTar]);
+                throw createError('EL01224', [sTar], { prop });
             }
             return;
 
@@ -899,7 +899,7 @@ function _execAllow(extType, tarType, opt, pathName) {
         } else if (eType['kind'] === '_ERR_') {
             if (eType['$type'] !== tType['$type'] || eType['kind'] !== tType['kind']) {
                 // 5
-                throw new ExtendError(/EL01225/, prop, [sTar]);
+                throw createError('EL01225', [sTar], { prop });
             }
             return;
 
@@ -908,7 +908,7 @@ function _execAllow(extType, tarType, opt, pathName) {
             if (eType['$type'] === tType['$type'] && (tType['kind'] === '_ALL_' || tType['kind'] === '_ANY_' 
             || tType['kind'] === '_OPT_' || tType['kind'] === '_NON_' || tType['kind'] === '_ERR_')) {
                 // 6
-                throw new ExtendError(/EL01226/, prop, [sTar]);
+                throw createError('EL01226', [sTar], { prop });
             }
 
         // _OPT_ (option)
@@ -917,32 +917,32 @@ function _execAllow(extType, tarType, opt, pathName) {
             if (eType['$type'] === tType['$type'] && (tType['kind'] === '_ALL_' || tType['kind'] === '_ANY_' 
             || tType['kind'] === '_NON_' || tType['kind'] === '_ERR_')) {
                 // 7
-                throw new ExtendError(/EL01227/, prop, [sTar]);
+                throw createError('EL01227', [sTar], { prop });
             }
         
             // _EUN_ (enumeration)
         } else if (eType['kind'] === '_EUM_') {
             if (eType['$type'] !== tType['$type'] || eType['kind'] !== tType['kind']) {
-                throw new ExtendError(/EL01228/, prop, []);
+                throw createError('EL01228', [], { prop });
             }
             for (var i = 0; i < eType['list'].length; i++) {
-                if (!_isLiteral(eType['list'][i])) throw new ExtendError(/EL01229/, prop, [i, extendType(eType['list'][i])]);
+                if (!_isLiteral(eType['list'][i])) throw createError('EL01229', [i, extendType(eType['list'][i])], { prop });
             }
             for (var j = 0; j < tType['list'].length; j++) {
-                if (!_isLiteral(tType['list'][j])) throw new ExtendError(/EL0122A/, prop, [j, extendType(tType['list'][j])]);
+                if (!_isLiteral(tType['list'][j])) throw createError('EL0122A', [j, extendType(tType['list'][j])], { prop });
             }
 
         // _DEF_ (default)
         } else if (eType['kind'] === '_DEF_') {
             if (eType['$type'] !== tType['$type'] || eType['kind'] !== tType['kind']) {
-                throw new ExtendError(/EL0122B/, prop, []);
+                throw createError('EL0122B', [], { prop });
             }
-            if (!_isLiteral(eType['list'][0])) throw new ExtendError(/EL0122C/, prop, [extendType(eType['list'][0])]);
-            if (!_isLiteral(tType['list'][0])) throw new ExtendError(/EL0122D/, prop,  [extendType(tType['list'][0])]);
+            if (!_isLiteral(eType['list'][0])) throw createError('EL0122C', [extendType(eType['list'][0])], { prop });
+            if (!_isLiteral(tType['list'][0])) throw createError('EL0122D', [extendType(tType['list'][0])], { prop });
 
         // _ETC_
         } else {
-            throw new ExtendError(/EL0122E/, prop, [eType['kind']]);
+            throw createError('EL0122E', [eType['kind']], { prop });
         }
 
         // element check
@@ -958,7 +958,7 @@ function _execAllow(extType, tarType, opt, pathName) {
                     continue;
                 }
             }
-            if (!success) throw new ExtendError(/EL0122F/, prop, [m, eType, extendType(arrTarget[m])['$type']]);
+            if (!success) throw createError('EL0122F', [m, eType, extendType(arrTarget[m])['$type']], { prop });
         }
     }
     
@@ -974,10 +974,10 @@ function _execAllow(extType, tarType, opt, pathName) {
                     tarObj = new tType['ref']();
                     return _execAllow(oriObj, tarObj, opt, pathName);
                 } catch (error) {
-                    throw new ExtendError(/EL01231/, error, []);
+                    throw createError('EL01231', [], { cause: error });
                 }                    
             }
-            throw new ExtendError(/EL01232/, prop, [opt]);
+            throw createError('EL01232', [opt], { prop });
 
         } else if (tType['$type'] === 'union') {  // # class to union
             if (opt === 1) {
@@ -986,64 +986,64 @@ function _execAllow(extType, tarType, opt, pathName) {
                     oriObj = new eType['ref']();
                     return _execAllow(oriObj, tType['ref'], opt, pathName);
                 } catch (error) {
-                    throw new ExtendError(/EL01233/, error, []);
+                    throw createError('EL01233', [], { cause: error });
                 }                    
             }
-            throw new ExtendError(/EL01234/, prop, [opt]);
+            throw createError('EL01234', [opt], { prop });
 
         }
-        throw new ExtendError(/EL01235/, prop, [tType]);
+        throw createError('EL01235', [tType], { prop });
     }
 
     function $unionAllow() {
         var list;
 
-        if (tType['$type'] !== 'union') throw new ExtendError(/EL01241/, prop, [tType]);
+        if (tType['$type'] !== 'union') throw createError('EL01241', [tType], { prop });
         list = getAllProperties(eType['ref']);
 
         for (var i = 0; i < list.length; i++) {
             var key = list[i];
-            if (!(key in tType['ref'])) throw new ExtendError(/EL01242/, prop, [key, typeOf(extType[key])]);      
+            if (!(key in tType['ref'])) throw createError('EL01242', [key, typeOf(extType[key])], { prop });
             try {
                 _execAllow(eType['ref'][key], tType['ref'][key], opt, pathName);
             } catch (error) {
-                throw new ExtendError(/EL01243/, error, [key]);
+                throw createError('EL01243', [key], { cause: error });
             }
         }
     }
 
     function $functionAllow() {
-        if (tType['$type'] !== 'function')  throw new ExtendError(/EL01251/, prop, [tType]);
+        if (tType['$type'] !== 'function')  throw createError('EL01251', [tType], { prop });
         if (eType['ref'] === Function) return;
         // special type check
         if (eType['name']) {
             if (eType['name'] === tarType.name  
             || eType['name'] === tType['name'] 
             || (tType['func'] && eType['name'] === tType['func'].name)) return;
-            throw new ExtendError(/EL01252/, prop, [eType['name'], tType.name]);
+            throw createError('EL01252', [eType['name'], tType.name], { prop });
         }
         if (eType['func']) {
-            if (typeof tType['func'] !== 'function') throw new ExtendError(/EL01253/, prop, []);
+            if (typeof tType['func'] !== 'function') throw createError('EL01253', [], { prop });
             if (isProtoChain(tType['func'], eType['func'])) return;
-            throw new ExtendError(/EL01254/, prop, []);
+            throw createError('EL01254', [], { prop });
         }
 
         if (!eType['return'] && (!eType['params'] || eType['params'].length === 0)) return;
         if (typeof tType['params'] === 'undefined' && typeof tType['return'] === 'undefined') { 
-            throw new ExtendError(/EL01255/, prop, [extendType(eType.params), typeOf(eType.return)]);
+            throw createError('EL01255', [extendType(eType.params), typeOf(eType.return)], { prop });
         }
         if (Array.isArray(eType['params']) && eType['params'].length > 0) {  
             try {   // params check
                 _execAllow(['_SEQ_'].concat(eType['params']), ['_SEQ_'].concat(tType['params']), opt, pathName);
             } catch (error) {
-                throw new ExtendError(/EL01256/, error, []);
+                throw createError('EL01256', [], { cause: error });
             }
         }
         if (eType['return']) {            
             try {   // return check
                 _execAllow(eType['return'], tType['return'], opt, pathName);
             } catch (error) {
-                throw new ExtendError(/EL01257/, error, []);
+                throw createError('EL01257', [], { cause: error });
             }
         }
     }
@@ -1055,7 +1055,7 @@ function _execAllow(extType, tarType, opt, pathName) {
  * @param {any} target 검사대상
  * @param {number} [opt] 허용옵션 : 0 = 기본, 1 = 타입생성 비교 
  * @param {string} [pathName] '' 공백시 성공
- * @throws {ExtendError}
+ * @throws {ContextError}
  */
 function _execMatch(extType, target, opt, pathName) {
     var eType = extendType(extType);
@@ -1071,53 +1071,53 @@ function _execMatch(extType, target, opt, pathName) {
     if (eType['kind']) {
         if ((eType['kind'] === '_SEQ_' || eType['kind'] === '_OPT_' || eType['kind'] === '_REQ_' || eType['kind'] === '_EUM_'|| eType['kind'] === '_DEF_') 
         && (typeof eType['ref'] === 'undefined' || eType['list'].length === 0)) {
-            throw new ExtendError(/EL01101/, prop, ['extType', sExt]);
+            throw createError('EL01101', ['extType', sExt], { prop });
         }
     }
 
     // check match type
     if (eType['$type'] === 'null') {
-        if (target !== null) throw new ExtendError(/EL01102/, prop, ['null', sTar]);
+        if (target !== null) throw createError('EL01102', ['null', sTar], { prop });
     
     } else if (eType['$type'] === 'undefined') {
-        if (typeof target !== 'undefined') throw new ExtendError(/EL01102/, prop, ['undefined', sTar]);
+        if (typeof target !== 'undefined') throw createError('EL01102', ['undefined', sTar], { prop });
     
     } else if (eType['$type'] === 'string') {
         if (typeof eType['default'] === 'string' && typeof target === 'undefined') target = eType['default'];
-        if (typeof target !== 'string') throw new ExtendError(/EL01102/, prop, ['string', sTar]);
+        if (typeof target !== 'string') throw createError('EL01102', ['string', sTar], { prop });
     
     } else if (eType['$type'] === 'number') {
         if (typeof eType['default'] === 'number' && typeof target === 'undefined') target = eType['default']; 
-        if (typeof target !== 'number') throw new ExtendError(/EL01102/, prop, ['number', sTar]);
+        if (typeof target !== 'number') throw createError('EL01102', ['number', sTar], { prop });
     
     } else if (eType['$type'] === 'boolean') {
         if (typeof eType['default'] === 'boolean' && typeof target === 'undefined') target = eType['default'];
-        if (typeof target !== 'boolean') throw new ExtendError(/EL01102/, prop, ['boolean', sTar]);
+        if (typeof target !== 'boolean') throw createError('EL01102', ['boolean', sTar], { prop });
     
     } else if (eType['$type'] === 'bigint') {    // ES6+
         if (typeof eType['default'] === 'bigint' && typeof target === 'undefined') target = eType['default'];
-        if (typeof target !== 'bigint') throw new ExtendError(/EL01102/, prop, ['bigint', sTar]);
+        if (typeof target !== 'bigint') throw createError('EL01102', ['bigint', sTar], { prop });
     
     } else if(eType['$type'] === 'symbol') {    // ES6+
-        if (typeof target !== 'symbol') throw new ExtendError(/EL01102/, prop, ['symbol', sTar]);
+        if (typeof target !== 'symbol') throw createError('EL01102', ['symbol', sTar], { prop });
     
     } else if (eType['$type'] === 'regexp') {
         if (eType['default'] && eType['default'] !== null && typeof target === 'undefined') target = eType['default'];
-        if (!(target instanceof RegExp)) throw new ExtendError(/EL01102/, prop, ['regexp', sTar]);
+        if (!(target instanceof RegExp)) throw createError('EL01102', ['regexp', sTar], { prop });
     
     } else if (eType['$type'] === 'object') {
-        if (tType['$type'] !== 'object') throw new ExtendError(/EL01102/, prop, ['object', sTar]);
+        if (tType['$type'] !== 'object') throw createError('EL01102', ['object', sTar], { prop });
 
     } else if (eType['$type'] === 'array') $arrayMatch();
     else if (eType['$type'] === 'choice') $choiceMatch();
     else if (eType['$type'] === 'class') $classMatch();
     else if (eType['$type'] === 'union') $unionMatch();
     else if (eType['$type'] === 'function') $functionMatch();        
-    else throw new ExtendError(/EL01103/, prop, []);
+    else throw createError('EL01103', [], { prop });
 
     // inner function
     function $arrayMatch() {
-        if (!Array.isArray(target)) throw new ExtendError(/EL01111/, prop, [sTar]);
+        if (!Array.isArray(target)) throw createError('EL01111', [sTar], { prop });
         
         // _ALL_ (all)
         if (eType['kind'] === '_ALL_') {      
@@ -1125,22 +1125,22 @@ function _execMatch(extType, target, opt, pathName) {
 
         // _ANY_ (any)
         } else if (eType['kind'] === '_ANY_') {
-            if (target.length === 0) throw new ExtendError(/EL01112/, prop, [target.length]);
+            if (target.length === 0) throw createError('EL01112', [target.length], { prop });
             return;
 
         // _SEQ_ (sequence)
         } else if (eType['kind'] === '_SEQ_') {
-            if (eType['list'].length > target.length) throw new ExtendError(/EL01113/, prop, [eType['list'].length, tType['list'].length]);    // REVIEW: 세부정보 표현
+            if (eType['list'].length > target.length) throw createError('EL01113', [eType['list'].length, tType['list'].length], { prop });    // REVIEW: 세부정보 표현
             for(var i = 0; i < eType['list'].length; i++) {
                 var _elem   = eType['list'][i];
                 var _tar    = tType['list'][i];
                 if (_isLiteral(_elem)) {
-                    if (!_equalLiternal(_elem, _tar)) throw new ExtendError(/EL01114/, prop, [i, _elem, _tar]);
+                    if (!_equalLiternal(_elem, _tar)) throw createError('EL01114', [i, _elem, _tar], { prop });
                 } else {
                     try {
                         _execMatch(_elem, _tar, opt, pathName);
                     } catch (error) {
-                        throw new ExtendError(/EL01115/, error, [i, typeOf(_elem)]);
+                        throw createError('EL01115', [i, typeOf(_elem)], { cause: error });
                     }
                 }
             }
@@ -1148,7 +1148,7 @@ function _execMatch(extType, target, opt, pathName) {
 
         // _REQ_ (require)
         } else if (eType['kind'] === '_REQ_') {
-            if (target.length === 0) throw new ExtendError(/EL01116/,  prop, [target.length]);
+            if (target.length === 0) throw createError('EL01116', [target.length], { prop });
 
         // _OPT_ (option)
         } else if (eType['kind'] === '_OPT_') {
@@ -1156,7 +1156,7 @@ function _execMatch(extType, target, opt, pathName) {
 
         // _ETC_
         } else {
-            throw new ExtendError(/EL01117/,  prop, [eType['kind']]);
+            throw createError('EL01117', [eType['kind']], { prop });
         }
         
 
@@ -1182,7 +1182,7 @@ function _execMatch(extType, target, opt, pathName) {
                 }
             }
             if (!success) {
-                throw new ExtendError(/EL01118/, prop, [eType.toString(), tType.toString()]);
+                throw createError('EL01118', [eType.toString(), tType.toString()], { prop });
             }
         }
     }
@@ -1195,17 +1195,17 @@ function _execMatch(extType, target, opt, pathName) {
         // _ANY_ (any)
         } else if (eType['kind'] === '_ANY_') {
             if (typeof target !== 'undefined') return undefined;
-            throw new ExtendError(/EL01121/, prop, []);
+            throw createError('EL01121', [], { prop });
 
         // _NON_ (none)
         } else if (eType['kind'] === '_NON_') {
             if (typeof target === 'undefined') return undefined;
-            throw new ExtendError(/EL01122/, []);
+            throw createError('EL01122');
             
         // _ERR_ (error)
         } else if (eType['kind'] === '_ERR_') {
             if (target instanceof Error) return undefined;
-            throw new ExtendError(/EL01123/, []);
+            throw createError('EL01123');
 
         // _REQ_ (require)
         } else if (eType['kind'] === '_REQ_') {
@@ -1217,12 +1217,12 @@ function _execMatch(extType, target, opt, pathName) {
         // _EUN_ (enumeration)
         } else if (eType['kind'] === '_EUM_') {
             for (var i = 0; i < eType['list'].length; i++) {
-                if (!_isLiteral(eType['list'][i])) throw new ExtendError(/EL01124/, prop, [i, typeOf(eType['list'][i])]);
+                if (!_isLiteral(eType['list'][i])) throw createError('EL01124', [i, typeOf(eType['list'][i])], { prop });
             }
 
         // _DEF_ (default)
         } else if (eType['kind'] === '_DEF_') {
-            if (!_isLiteral(eType['list'][0])) throw new ExtendError(/EL01125/, prop, [typeOf(eType['list'][0])]);
+            if (!_isLiteral(eType['list'][0])) throw createError('EL01125', [typeOf(eType['list'][0])], { prop });
             if (typeof target === 'undefined') {
                 target = eType['list'][0];
                 return undefined;
@@ -1274,7 +1274,7 @@ function _execMatch(extType, target, opt, pathName) {
         
         // _ETC_
         } else {
-            throw new ExtendError(/EL01126/,  prop, [eType['kind']]);
+            throw createError('EL01126', [eType['kind']], { prop });
         }
 
         // element check
@@ -1290,7 +1290,7 @@ function _execMatch(extType, target, opt, pathName) {
                 continue;
             }
         }
-        throw new ExtendError(/EL01127/, prop,[eType, tType]);
+        throw createError('EL01127', [eType, tType], { prop });
     }
 
     function $classMatch() {
@@ -1304,18 +1304,18 @@ function _execMatch(extType, target, opt, pathName) {
                     var subPath = pathName === 'extType' ? '<instance>' : pathName + '<instance>';
                     return _execMatch(_creator(extType), target, opt, subPath);
                 } catch (error) {
-                    throw new ExtendError(/EL01131/, error);
+                    throw createError('EL01131', [], { cause: error });
                 }
             }
-            throw new ExtendError(/EL01132/, prop, [_typeName(extType)]);
+            throw createError('EL01132', [_typeName(extType)], { prop });
         }
-        throw new ExtendError(/EL01133/, prop, [tType]);                
+        throw createError('EL01133', [tType], { prop });
     }
 
     function $unionMatch() {
         var list;
         
-        if (tType['$type'] !== 'union') throw new ExtendError(/EL01141/, prop, [tType]);
+        if (tType['$type'] !== 'union') throw createError('EL01141', [tType], { prop });
         list = getAllProperties(eType.ref);
 
         for (var i = 0; i < list.length; i++) {
@@ -1332,37 +1332,37 @@ function _execMatch(extType, target, opt, pathName) {
                 var subPath = pathName +'[\''+ key+'\']';
                 _execMatch(extType[key], target[key], opt, subPath);
             } catch (error) {
-                throw new ExtendError(/EL01143/, error, [key]);
+                throw createError('EL01143', [key], { cause: error });
             }
         }
     }
 
     function $functionMatch() {
-        if (tType['$type'] !== 'function') throw new ExtendError(/EL01151/, prop, [tType]);
+        if (tType['$type'] !== 'function') throw createError('EL01151', [tType], { prop });
         if (eType['ref'] === Function) return;
         // special type check
         if (eType['name']) {
             if (eType['name'] === target.name 
             || eType['name'] === tType['name'] 
             || (tType['func'] && eType['name'] === tType['func'].name)) return;
-            throw new ExtendError(/EL01152/, prop, [eType['name'], target.name]);
+            throw createError('EL01152', [eType['name'], target.name], { prop });
         }
         if (eType['func']) {
-            if (typeof tType['func'] !== 'function') throw new ExtendError(/EL01153/, prop, []);
+            if (typeof tType['func'] !== 'function') throw createError('EL01153', [], { prop });
             if (isProtoChain(tType['func'], eType['func'])) return;
-            throw new ExtendError(/EL01154/, prop, []);
+            throw createError('EL01154', [], { prop });
         }
 
         if (!eType['return'] && (!eType['params'] || eType['params'].length === 0)) return;
         if (typeof tType['params'] === 'undefined' && typeof tType['return'] === 'undefined') { 
-            throw new ExtendError(/EL01155/, prop, [extendType(eType.params), typeOf(eType.return)]);
+            throw createError('EL01155', [extendType(eType.params), typeOf(eType.return)], { prop });
         }
         // params check
         if (Array.isArray(eType['params']) && eType['params'].length > 0) {  
             try {
                 _execAllow(['_SEQ_'].concat(eType['params']), ['_SEQ_'].concat(tType['params']), opt, pathName);
             } catch (error) {
-                throw new ExtendError(/EL01156/, error, []);
+                throw createError('EL01156', [], { cause: error });
             }
         }
         // return check
@@ -1370,7 +1370,7 @@ function _execMatch(extType, target, opt, pathName) {
             try {
                 _execAllow(eType['return'], tType['return'], opt, pathName);
             } catch (error) {
-                throw new ExtendError(/EL01157/, prop, []);
+                throw createError('EL01157', [], { prop });
             }
         }
     }
@@ -1388,7 +1388,7 @@ function allowType(extType, tarType, opt) {
     try {
         _execAllow(extType, tarType, opt);
     } catch (error) {
-        throw new ExtendError(/EL0130A/, error);
+        throw createError('EL0130A', [], { cause: error });
     }
 }
 Type.allowType = allowType;
@@ -1405,7 +1405,7 @@ function matchType(extType, target, opt) {
     try {
         _execMatch(extType, target, opt);
     } catch (error) {
-        throw new ExtendError(/EL0130B/, error);
+        throw createError('EL0130B', [], { cause: error });
     }
 }
 Type.matchType = matchType;

@@ -1,0 +1,411 @@
+<div id="logic-type-compatibility">
+  <style>
+    #logic-type-compatibility { color: var(--foreground); }
+    #logic-type-compatibility [hidden] { display: none !important; }
+    #logic-type-compatibility .compat-stack { display: grid; gap: 16px; }
+    #logic-type-compatibility .compat-top { padding-right: 90px; }
+    #logic-type-compatibility .compat-detail { display: grid; gap: 6px; overflow-wrap: anywhere; }
+    #logic-type-compatibility .compat-expression { white-space: normal; overflow-wrap: anywhere; }
+    #logic-type-compatibility .compat-keys { display: flex; flex-wrap: wrap; gap: 8px 18px; }
+    #logic-type-compatibility .compat-key { display: inline-flex; gap: 6px; align-items: baseline; }
+    #logic-type-compatibility .compat-legend { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
+    #logic-type-compatibility .compat-swatch { display: inline-block; width: 12px; height: 12px; margin-right: 5px; }
+    #logic-type-compatibility .compat-yes { background: color-mix(in srgb, var(--viz-series-1) 22%, transparent); }
+    #logic-type-compatibility .compat-no { background: var(--muted); }
+    #logic-type-compatibility .compat-different { box-shadow: inset 0 -3px var(--viz-series-2); }
+    #logic-type-compatibility .compat-comparison { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+    #logic-type-compatibility .compat-graph { display: block; width: 100%; overflow: visible; }
+    #logic-type-compatibility .compat-graph text { fill: var(--foreground); font-size: 12px; font-weight: 400; }
+    #logic-type-compatibility .compat-graph .graph-node { fill: var(--muted); stroke: var(--border); stroke-width: 1; }
+    #logic-type-compatibility .compat-graph .graph-edge { fill: none; stroke-width: 1.5; }
+    #logic-type-compatibility .compat-graph .graph-allowed { stroke: var(--viz-series-1); }
+    #logic-type-compatibility .compat-graph .graph-blocked { stroke: var(--viz-series-2); stroke-dasharray: 4 4; }
+    #logic-type-compatibility .compat-graph .graph-label-bg { fill: var(--background); }
+    @media (max-width: 600px) {
+      #logic-type-compatibility .compat-comparison { grid-template-columns: minmax(0, 1fr); }
+    }
+  </style>
+  <div class="compat-stack">
+    <div class="compat-top">
+      <h2>타입 호환 관계</h2>
+      <div class="text-small text-muted">현재 type.js 기준 · 2026-10-21 · 대표 선언별 관계</div>
+    </div>
+    <div id="ltc-tabs" class="nav nav-pills" role="tablist" aria-label="타입 호환 관계의 관점"></div>
+    <div id="ltc-panels"></div>
+  </div>
+</div>
+<script id="ltc-data" type="application/json">
+{"date":"2026-10-21","hash":"99b997ea36ed","views":[{"id":"family","label":"타입 분류","title":"타입 분류 간 허용","mode":"allow","rows":[{"id":"u","label":"undefined","expr":"undefined"},{"id":"n","label":"null","expr":"null"},{"id":"num","label":"Number","expr":"Number"},{"id":"str","label":"String","expr":"String"},{"id":"bool","label":"Boolean","expr":"Boolean"},{"id":"big","label":"bigint†","expr":"{ $type: 'bigint' }"},{"id":"sym","label":"Symbol","expr":"Symbol"},{"id":"re","label":"RegExp","expr":"RegExp"},{"id":"obj","label":"Object","expr":"Object"},{"id":"arr","label":"Array","expr":"Array"},{"id":"fn","label":"Function","expr":"Function"},{"id":"cls","label":"class","expr":"Animal"},{"id":"rec","label":"record","expr":"{ name: String }"},{"id":"cho","label":"choice","expr":"[['_REQ_', String, Number]]"}],"cols":[{"id":"u","label":"undefined","expr":"undefined"},{"id":"n","label":"null","expr":"null"},{"id":"num","label":"Number","expr":"Number"},{"id":"str","label":"String","expr":"String"},{"id":"bool","label":"Boolean","expr":"Boolean"},{"id":"big","label":"bigint†","expr":"{ $type: 'bigint' }"},{"id":"sym","label":"Symbol","expr":"Symbol"},{"id":"re","label":"RegExp","expr":"RegExp"},{"id":"obj","label":"Object","expr":"Object"},{"id":"arr","label":"Array","expr":"Array"},{"id":"fn","label":"Function","expr":"Function"},{"id":"cls","label":"class","expr":"Animal"},{"id":"rec","label":"record","expr":"{ name: String }"},{"id":"cho","label":"choice","expr":"[['_REQ_', String, Number]]"}],"cells":[[{"ok":true},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type undefined. tarType = null"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type undefined. tarType = number"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type undefined. tarType = string"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type undefined. tarType = boolean"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type undefined. tarType = bigint"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type undefined. tarType = symbol"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type undefined. tarType = regexp"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type undefined. tarType = object"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type undefined. tarType = array"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type undefined. tarType = function"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type undefined. tarType = class"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type undefined. tarType = union"},{"ok":false,"codes":["EL0130A","EL0122F"],"reason":"Choice allowed: tarType[0] = string, no extType allowed. extType = choice(_REQ_)[undefined]"}],[{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type null. tarType = undefined"},{"ok":true},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type null. tarType = number"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type null. tarType = string"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type null. tarType = boolean"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type null. tarType = bigint"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type null. tarType = symbol"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type null. tarType = regexp"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type null. tarType = object"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type null. tarType = array"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type null. tarType = function"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type null. tarType = class"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type null. tarType = union"},{"ok":false,"codes":["EL0130A","EL0122F"],"reason":"Choice allowed: tarType[0] = string, no extType allowed. extType = choice(_REQ_)[null]"}],[{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type number. tarType = undefined"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type number. tarType = null"},{"ok":true},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type number. tarType = string"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type number. tarType = boolean"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type number. tarType = bigint"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type number. tarType = symbol"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type number. tarType = regexp"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type number. tarType = object"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type number. tarType = array"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type number. tarType = function"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type number. tarType = class"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type number. tarType = union"},{"ok":false,"codes":["EL0130A","EL0122F"],"reason":"Choice allowed: tarType[0] = string, no extType allowed. extType = choice(_REQ_)[number]"}],[{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type string. tarType = undefined"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type string. tarType = null"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type string. tarType = number"},{"ok":true},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type string. tarType = boolean"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type string. tarType = bigint"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type string. tarType = symbol"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type string. tarType = regexp"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type string. tarType = object"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type string. tarType = array"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type string. tarType = function"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type string. tarType = class"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type string. tarType = union"},{"ok":false,"codes":["EL0130A","EL0122F"],"reason":"Choice allowed: tarType[1] = number, no extType allowed. extType = choice(_REQ_)[string]"}],[{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type boolean. tarType = undefined"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type boolean. tarType = null"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type boolean. tarType = number"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type boolean. tarType = string"},{"ok":true},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type boolean. tarType = bigint"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type boolean. tarType = symbol"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type boolean. tarType = regexp"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type boolean. tarType = object"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type boolean. tarType = array"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type boolean. tarType = function"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type boolean. tarType = class"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type boolean. tarType = union"},{"ok":false,"codes":["EL0130A","EL0122F"],"reason":"Choice allowed: tarType[0] = string, no extType allowed. extType = choice(_REQ_)[boolean]"}],[{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type bigint. tarType = undefined"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type bigint. tarType = null"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type bigint. tarType = number"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type bigint. tarType = string"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type bigint. tarType = boolean"},{"ok":true},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type bigint. tarType = symbol"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type bigint. tarType = regexp"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type bigint. tarType = object"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type bigint. tarType = array"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type bigint. tarType = function"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type bigint. tarType = class"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type bigint. tarType = union"},{"ok":false,"codes":["EL0130A","EL0122F"],"reason":"Choice allowed: tarType[0] = string, no extType allowed. extType = choice(_REQ_)[bigint]"}],[{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type symbol. tarType = undefined"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type symbol. tarType = null"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type symbol. tarType = number"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type symbol. tarType = string"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type symbol. tarType = boolean"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type symbol. tarType = bigint"},{"ok":true},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type symbol. tarType = regexp"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type symbol. tarType = object"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type symbol. tarType = array"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type symbol. tarType = function"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type symbol. tarType = class"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type symbol. tarType = union"},{"ok":false,"codes":["EL0130A","EL0122F"],"reason":"Choice allowed: tarType[0] = string, no extType allowed. extType = choice(_REQ_)[symbol]"}],[{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type regexp. tarType = undefined"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type regexp. tarType = null"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type regexp. tarType = number"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type regexp. tarType = string"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type regexp. tarType = boolean"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type regexp. tarType = bigint"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type regexp. tarType = symbol"},{"ok":true},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type regexp. tarType = object"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type regexp. tarType = array"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type regexp. tarType = function"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type regexp. tarType = class"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type regexp. tarType = union"},{"ok":false,"codes":["EL0130A","EL0122F"],"reason":"Choice allowed: tarType[0] = string, no extType allowed. extType = choice(_REQ_)[regexp]"}],[{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type object. tarType = undefined"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type object. tarType = null"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type object. tarType = number"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type object. tarType = string"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type object. tarType = boolean"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type object. tarType = bigint"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type object. tarType = symbol"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type object. tarType = regexp"},{"ok":true},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type object. tarType = array"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type object. tarType = function"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type object. tarType = class"},{"ok":false,"codes":["EL0130A","EL01203"],"reason":"Type allowed: not type object. tarType = union"},{"ok":false,"codes":["EL0130A","EL0122F"],"reason":"Choice allowed: tarType[0] = string, no extType allowed. extType = choice(_REQ_)[object]"}],[{"ok":false,"codes":["EL0130A","EL01211"],"reason":"Array permit: Not array type. tarType: undefined"},{"ok":false,"codes":["EL0130A","EL01211"],"reason":"Array permit: Not array type. tarType: null"},{"ok":false,"codes":["EL0130A","EL01211"],"reason":"Array permit: Not array type. tarType: number"},{"ok":false,"codes":["EL0130A","EL01211"],"reason":"Array permit: Not array type. tarType: string"},{"ok":false,"codes":["EL0130A","EL01211"],"reason":"Array permit: Not array type. tarType: boolean"},{"ok":false,"codes":["EL0130A","EL01211"],"reason":"Array permit: Not array type. tarType: bigint"},{"ok":false,"codes":["EL0130A","EL01211"],"reason":"Array permit: Not array type. tarType: symbol"},{"ok":false,"codes":["EL0130A","EL01211"],"reason":"Array permit: Not array type. tarType: regexp"},{"ok":false,"codes":["EL0130A","EL01211"],"reason":"Array permit: Not array type. tarType: object"},{"ok":true},{"ok":false,"codes":["EL0130A","EL01211"],"reason":"Array permit: Not array type. tarType: function"},{"ok":false,"codes":["EL0130A","EL01211"],"reason":"Array permit: Not array type. tarType: class"},{"ok":false,"codes":["EL0130A","EL01211"],"reason":"Array permit: Not array type. tarType: union"},{"ok":false,"codes":["EL0130A","EL0122F"],"reason":"Choice allowed: tarType[0] = string, no extType allowed. extType = choice(_REQ_)[array]"}],[{"ok":false,"codes":["EL0130A","EL01251"],"reason":"Allow function : tarType is not function type. tarType : undefined"},{"ok":false,"codes":["EL0130A","EL01251"],"reason":"Allow function : tarType is not function type. tarType : null"},{"ok":false,"codes":["EL0130A","EL01251"],"reason":"Allow function : tarType is not function type. tarType : number"},{"ok":false,"codes":["EL0130A","EL01251"],"reason":"Allow function : tarType is not function type. tarType : string"},{"ok":false,"codes":["EL0130A","EL01251"],"reason":"Allow function : tarType is not function type. tarType : boolean"},{"ok":false,"codes":["EL0130A","EL01251"],"reason":"Allow function : tarType is not function type. tarType : bigint"},{"ok":false,"codes":["EL0130A","EL01251"],"reason":"Allow function : tarType is not function type. tarType : symbol"},{"ok":false,"codes":["EL0130A","EL01251"],"reason":"Allow function : tarType is not function type. tarType : regexp"},{"ok":false,"codes":["EL0130A","EL01251"],"reason":"Allow function : tarType is not function type. tarType : object"},{"ok":false,"codes":["EL0130A","EL01251"],"reason":"Allow function : tarType is not function type. tarType : array(_ALL_)"},{"ok":true},{"ok":false,"codes":["EL0130A","EL01251"],"reason":"Allow function : tarType is not function type. tarType : class"},{"ok":false,"codes":["EL0130A","EL01251"],"reason":"Allow function : tarType is not function type. tarType : union"},{"ok":false,"codes":["EL0130A","EL0122F"],"reason":"Choice allowed: tarType[0] = string, no extType allowed. extType = choice(_REQ_)[function]"}],[{"ok":false,"codes":["EL0130A","EL01235"],"reason":"Class allowed: tarType is not class, union type. tarType: undefined"},{"ok":false,"codes":["EL0130A","EL01235"],"reason":"Class allowed: tarType is not class, union type. tarType: null"},{"ok":false,"codes":["EL0130A","EL01235"],"reason":"Class allowed: tarType is not class, union type. tarType: number"},{"ok":false,"codes":["EL0130A","EL01235"],"reason":"Class allowed: tarType is not class, union type. tarType: string"},{"ok":false,"codes":["EL0130A","EL01235"],"reason":"Class allowed: tarType is not class, union type. tarType: boolean"},{"ok":false,"codes":["EL0130A","EL01235"],"reason":"Class allowed: tarType is not class, union type. tarType: bigint"},{"ok":false,"codes":["EL0130A","EL01235"],"reason":"Class allowed: tarType is not class, union type. tarType: symbol"},{"ok":false,"codes":["EL0130A","EL01235"],"reason":"Class allowed: tarType is not class, union type. tarType: regexp"},{"ok":false,"codes":["EL0130A","EL01235"],"reason":"Class allowed: tarType is not class, union type. tarType: object"},{"ok":false,"codes":["EL0130A","EL01235"],"reason":"Class allowed: tarType is not class, union type. tarType: array(_ALL_)"},{"ok":false,"codes":["EL0130A","EL01235"],"reason":"Class allowed: tarType is not class, union type. tarType: function"},{"ok":true},{"ok":false,"codes":["EL0130A","EL01234"],"reason":"Class allowed: class to union denied. (opt = 0)"},{"ok":false,"codes":["EL0130A","EL0122F"],"reason":"Choice allowed: tarType[0] = string, no extType allowed. extType = choice(_REQ_)[class]"}],[{"ok":false,"codes":["EL0130A","EL01241"],"reason":"Union allowed: tarType is not a union type. tarType: undefined"},{"ok":false,"codes":["EL0130A","EL01241"],"reason":"Union allowed: tarType is not a union type. tarType: null"},{"ok":false,"codes":["EL0130A","EL01241"],"reason":"Union allowed: tarType is not a union type. tarType: number"},{"ok":false,"codes":["EL0130A","EL01241"],"reason":"Union allowed: tarType is not a union type. tarType: string"},{"ok":false,"codes":["EL0130A","EL01241"],"reason":"Union allowed: tarType is not a union type. tarType: boolean"},{"ok":false,"codes":["EL0130A","EL01241"],"reason":"Union allowed: tarType is not a union type. tarType: bigint"},{"ok":false,"codes":["EL0130A","EL01241"],"reason":"Union allowed: tarType is not a union type. tarType: symbol"},{"ok":false,"codes":["EL0130A","EL01241"],"reason":"Union allowed: tarType is not a union type. tarType: regexp"},{"ok":false,"codes":["EL0130A","EL01241"],"reason":"Union allowed: tarType is not a union type. tarType: object"},{"ok":false,"codes":["EL0130A","EL01241"],"reason":"Union allowed: tarType is not a union type. tarType: array(_ALL_)"},{"ok":false,"codes":["EL0130A","EL01241"],"reason":"Union allowed: tarType is not a union type. tarType: function"},{"ok":false,"codes":["EL0130A","EL01241"],"reason":"Union allowed: tarType is not a union type. tarType: class"},{"ok":true},{"ok":false,"codes":["EL0130A","EL0122F"],"reason":"Choice allowed: tarType[0] = string, no extType allowed. extType = choice(_REQ_)[union]"}],[{"ok":false,"codes":["EL0130A","EL0122F"],"reason":"Choice allowed: tarType[0] = undefined, no extType allowed. extType = choice(_REQ_)[string, number]"},{"ok":false,"codes":["EL0130A","EL0122F"],"reason":"Choice allowed: tarType[0] = null, no extType allowed. extType = choice(_REQ_)[string, number]"},{"ok":true},{"ok":true},{"ok":false,"codes":["EL0130A","EL0122F"],"reason":"Choice allowed: tarType[0] = boolean, no extType allowed. extType = choice(_REQ_)[string, number]"},{"ok":false,"codes":["EL0130A","EL0122F"],"reason":"Choice allowed: tarType[0] = bigint, no extType allowed. extType = choice(_REQ_)[string, number]"},{"ok":false,"codes":["EL0130A","EL0122F"],"reason":"Choice allowed: tarType[0] = symbol, no extType allowed. extType = choice(_REQ_)[string, number]"},{"ok":false,"codes":["EL0130A","EL0122F"],"reason":"Choice allowed: tarType[0] = regexp, no extType allowed. extType = choice(_REQ_)[string, number]"},{"ok":false,"codes":["EL0130A","EL0122F"],"reason":"Choice allowed: tarType[0] = object, no extType allowed. extType = choice(_REQ_)[string, number]"},{"ok":true},{"ok":false,"codes":["EL0130A","EL0122F"],"reason":"Choice allowed: tarType[0] = function, no extType allowed. extType = choice(_REQ_)[string, number]"},{"ok":false,"codes":["EL0130A","EL0122F"],"reason":"Choice allowed: tarType[0] = class, no extType allowed. extType = choice(_REQ_)[string, number]"},{"ok":false,"codes":["EL0130A","EL0122F"],"reason":"Choice allowed: tarType[0] = union, no extType allowed. extType = choice(_REQ_)[string, number]"},{"ok":true}]],"note":"record = 구현의 union · choice = 후보 중 하나 · †bigint는 기존 분류이며 새 코어에서 사용 금지"},{"id":"choice","label":"choice","title":"choice kind 간 허용","mode":"allow","rows":[{"id":"all","label":"ALL","expr":"[['_ALL_']]"},{"id":"any","label":"ANY","expr":"[[]]"},{"id":"non","label":"NON","expr":"[['_NON_']]"},{"id":"err","label":"ERR","expr":"[['_ERR_']]"},{"id":"req","label":"REQ","expr":"[['_REQ_', String]]"},{"id":"opt","label":"OPT","expr":"[[String]]"},{"id":"eum","label":"EUM","expr":"[['_EUM_', 'A', 'B']]"},{"id":"def","label":"DEF","expr":"[['_DEF_', 'A', String]]"}],"cols":[{"id":"all","label":"ALL","expr":"[['_ALL_']]"},{"id":"any","label":"ANY","expr":"[[]]"},{"id":"non","label":"NON","expr":"[['_NON_']]"},{"id":"err","label":"ERR","expr":"[['_ERR_']]"},{"id":"req","label":"REQ","expr":"[['_REQ_', String]]"},{"id":"opt","label":"OPT","expr":"[[String]]"},{"id":"eum","label":"EUM","expr":"[['_EUM_', 'A', 'B']]"},{"id":"def","label":"DEF","expr":"[['_DEF_', 'A', String]]"}],"cells":[[{"ok":true},{"ok":true},{"ok":true},{"ok":false,"reason":"Choice allowed: do not allow choice(_ERR_) type for choice(_ALL_). tarType: choice","codes":["EL0130A","EL01221"]},{"ok":true},{"ok":true},{"ok":true},{"ok":true}],[{"ok":false,"reason":"Choice allowed: choice(_NON_, _ERR_) type is not allowed for choice(_ANY_) type. tarType: choice(_ALL_)","codes":["EL0130A","EL01223"]},{"ok":true},{"ok":false,"reason":"Choice allowed: choice(_NON_, _ERR_) type is not allowed for choice(_ANY_) type. tarType: choice(_NON_)","codes":["EL0130A","EL01223"]},{"ok":false,"reason":"Choice allowed: choice(_NON_, _ERR_) type is not allowed for choice(_ANY_) type. tarType: choice(_ERR_)","codes":["EL0130A","EL01223"]},{"ok":true},{"ok":false,"reason":"Choice allowed: choice(_NON_, _ERR_) type is not allowed for choice(_ANY_) type. tarType: choice(_OPT_)[string]","codes":["EL0130A","EL01223"]},{"ok":true},{"ok":true}],[{"ok":false,"reason":"Choice allowed: only choice(_NON_) type and choice(_NON_) type. tarType: choice(_ALL_)","codes":["EL0130A","EL01224"]},{"ok":false,"reason":"Choice allowed: only choice(_NON_) type and choice(_NON_) type. tarType: choice(_ANY_)","codes":["EL0130A","EL01224"]},{"ok":true},{"ok":false,"reason":"Choice allowed: only choice(_NON_) type and choice(_NON_) type. tarType: choice(_ERR_)","codes":["EL0130A","EL01224"]},{"ok":false,"reason":"Choice allowed: only choice(_NON_) type and choice(_NON_) type. tarType: choice(_REQ_)[string]","codes":["EL0130A","EL01224"]},{"ok":false,"reason":"Choice allowed: only choice(_NON_) type and choice(_NON_) type. tarType: choice(_OPT_)[string]","codes":["EL0130A","EL01224"]},{"ok":false,"reason":"Choice allowed: only choice(_NON_) type and choice(_NON_) type. tarType: choice(_EUM_)[string('A'), string('B')]","codes":["EL0130A","EL01224"]},{"ok":false,"reason":"Choice allowed: only choice(_NON_) type and choice(_NON_) type. tarType: choice(_DEF_)[string('A'), string]","codes":["EL0130A","EL01224"]}],[{"ok":false,"reason":"Choice allowed: choice(_ERR_) type and choice(_ERR_) type only. tarType: choice(_ALL_)","codes":["EL0130A","EL01225"]},{"ok":false,"reason":"Choice allowed: choice(_ERR_) type and choice(_ERR_) type only. tarType: choice(_ANY_)","codes":["EL0130A","EL01225"]},{"ok":false,"reason":"Choice allowed: choice(_ERR_) type and choice(_ERR_) type only. tarType: choice(_NON_)","codes":["EL0130A","EL01225"]},{"ok":true},{"ok":false,"reason":"Choice allowed: choice(_ERR_) type and choice(_ERR_) type only. tarType: choice(_REQ_)[string]","codes":["EL0130A","EL01225"]},{"ok":false,"reason":"Choice allowed: choice(_ERR_) type and choice(_ERR_) type only. tarType: choice(_OPT_)[string]","codes":["EL0130A","EL01225"]},{"ok":false,"reason":"Choice allowed: choice(_ERR_) type and choice(_ERR_) type only. tarType: choice(_EUM_)[string('A'), string('B')]","codes":["EL0130A","EL01225"]},{"ok":false,"reason":"Choice allowed: choice(_ERR_) type and choice(_ERR_) type only. tarType: choice(_DEF_)[string('A'), string]","codes":["EL0130A","EL01225"]}],[{"ok":false,"reason":"Choice allowed: do not allow choice(_ALL_, _ANY_, _OPT_, _NON_, _ERR_) type for choice(_REQ_). tarType: choice(_ALL_)","codes":["EL0130A","EL01226"]},{"ok":false,"reason":"Choice allowed: do not allow choice(_ALL_, _ANY_, _OPT_, _NON_, _ERR_) type for choice(_REQ_). tarType: choice(_ANY_)","codes":["EL0130A","EL01226"]},{"ok":false,"reason":"Choice allowed: do not allow choice(_ALL_, _ANY_, _OPT_, _NON_, _ERR_) type for choice(_REQ_). tarType: choice(_NON_)","codes":["EL0130A","EL01226"]},{"ok":false,"reason":"Choice allowed: do not allow choice(_ALL_, _ANY_, _OPT_, _NON_, _ERR_) type for choice(_REQ_). tarType: choice(_ERR_)","codes":["EL0130A","EL01226"]},{"ok":true},{"ok":false,"reason":"Choice allowed: do not allow choice(_ALL_, _ANY_, _OPT_, _NON_, _ERR_) type for choice(_REQ_). tarType: choice(_OPT_)[string]","codes":["EL0130A","EL01226"]},{"ok":true},{"ok":true}],[{"ok":false,"reason":"Choice allowed: do not allow choice(_ALL_, _ANY_, _NON_, _ERR_) type for choice(_OPT_). tarType: choice(_ALL_)","codes":["EL0130A","EL01227"]},{"ok":false,"reason":"Choice allowed: do not allow choice(_ALL_, _ANY_, _NON_, _ERR_) type for choice(_OPT_). tarType: choice(_ANY_)","codes":["EL0130A","EL01227"]},{"ok":false,"reason":"Choice allowed: do not allow choice(_ALL_, _ANY_, _NON_, _ERR_) type for choice(_OPT_). tarType: choice(_NON_)","codes":["EL0130A","EL01227"]},{"ok":false,"reason":"Choice allowed: do not allow choice(_ALL_, _ANY_, _NON_, _ERR_) type for choice(_OPT_). tarType: choice(_ERR_)","codes":["EL0130A","EL01227"]},{"ok":true},{"ok":true},{"ok":true},{"ok":true}],[{"ok":false,"reason":"Choice allowed: choice(_EUM_) type and choice(_EUM_) type only","codes":["EL0130A","EL01228"]},{"ok":false,"reason":"Choice allowed: choice(_EUM_) type and choice(_EUM_) type only","codes":["EL0130A","EL01228"]},{"ok":false,"reason":"Choice allowed: choice(_EUM_) type and choice(_EUM_) type only","codes":["EL0130A","EL01228"]},{"ok":false,"reason":"Choice allowed: choice(_EUM_) type and choice(_EUM_) type only","codes":["EL0130A","EL01228"]},{"ok":false,"reason":"Choice allowed: choice(_EUM_) type and choice(_EUM_) type only","codes":["EL0130A","EL01228"]},{"ok":false,"reason":"Choice allowed: choice(_EUM_) type and choice(_EUM_) type only","codes":["EL0130A","EL01228"]},{"ok":true},{"ok":false,"reason":"Choice allowed: choice(_EUM_) type and choice(_EUM_) type only","codes":["EL0130A","EL01228"]}],[{"ok":false,"reason":"Choice allowed: choice(_DEF_) type and choice(_DEF_) type only","codes":["EL0130A","EL0122B"]},{"ok":false,"reason":"Choice allowed: choice(_DEF_) type and choice(_DEF_) type only","codes":["EL0130A","EL0122B"]},{"ok":false,"reason":"Choice allowed: choice(_DEF_) type and choice(_DEF_) type only","codes":["EL0130A","EL0122B"]},{"ok":false,"reason":"Choice allowed: choice(_DEF_) type and choice(_DEF_) type only","codes":["EL0130A","EL0122B"]},{"ok":false,"reason":"Choice allowed: choice(_DEF_) type and choice(_DEF_) type only","codes":["EL0130A","EL0122B"]},{"ok":false,"reason":"Choice allowed: choice(_DEF_) type and choice(_DEF_) type only","codes":["EL0130A","EL0122B"]},{"ok":false,"reason":"Choice allowed: choice(_DEF_) type and choice(_DEF_) type only","codes":["EL0130A","EL0122B"]},{"ok":true}]],"note":"REQ·OPT: String · EUM: A/B · DEF: A + String · 후보 목록에 따른 결과"},{"id":"array","label":"배열","title":"배열의 길이·요소·순서 관계","mode":"allow","rows":[{"id":"all","label":"ALL","expr":"Array"},{"id":"any","label":"ANY","expr":"[]"},{"id":"req","label":"REQ·S","expr":"['_REQ_', String]"},{"id":"opt","label":"OPT·S","expr":"[String]"},{"id":"seq","label":"SEQ·S","expr":"['_SEQ_', String]"},{"id":"seq2","label":"SEQ·SN","expr":"['_SEQ_', String, Number]"},{"id":"mixr","label":"REQ·S|N","expr":"['_REQ_', String, Number]"},{"id":"mixo","label":"OPT·S|N","expr":"[String, Number]"}],"cols":[{"id":"all","label":"ALL","expr":"Array"},{"id":"any","label":"ANY","expr":"[]"},{"id":"req","label":"REQ·S","expr":"['_REQ_', String]"},{"id":"opt","label":"OPT·S","expr":"[String]"},{"id":"seq","label":"SEQ·S","expr":"['_SEQ_', String]"},{"id":"seq2","label":"SEQ·SN","expr":"['_SEQ_', String, Number]"},{"id":"mixr","label":"REQ·S|N","expr":"['_REQ_', String, Number]"},{"id":"mixo","label":"OPT·S|N","expr":"[String, Number]"}],"cells":[[{"ok":true},{"ok":true},{"ok":true},{"ok":true},{"ok":true},{"ok":true},{"ok":true},{"ok":true}],[{"ok":false,"reason":"Type allowed: array(_ALL_, _OPT_) type is not allowed for array(_ANY_) type. tarType: array(_ALL_)","codes":["EL0130A","EL01212"]},{"ok":true},{"ok":true},{"ok":false,"reason":"Type allowed: array(_ALL_, _OPT_) type is not allowed for array(_ANY_) type. tarType: array(_OPT_)[string]","codes":["EL0130A","EL01212"]},{"ok":true},{"ok":true},{"ok":true},{"ok":false,"reason":"Type allowed: array(_ALL_, _OPT_) type is not allowed for array(_ANY_) type. tarType: array(_OPT_)[string, number]","codes":["EL0130A","EL01212"]}],[{"ok":false,"reason":"Allow array : Do not allow array(_ALL_, _ANY_, _OPT_) type for array(_REQ_). tarType: array(_ALL_)","codes":["EL0130A","EL01216"]},{"ok":false,"reason":"Allow array : Do not allow array(_ALL_, _ANY_, _OPT_) type for array(_REQ_). tarType: array(_ANY_)","codes":["EL0130A","EL01216"]},{"ok":true},{"ok":false,"reason":"Allow array : Do not allow array(_ALL_, _ANY_, _OPT_) type for array(_REQ_). tarType: array(_OPT_)[string]","codes":["EL0130A","EL01216"]},{"ok":true},{"ok":false,"reason":"Array element check failed. extType: array(_REQ_)[string], tarType: array(_SEQ_)[string, number]","codes":["EL0130A","EL01219"]},{"ok":false,"reason":"Array element check failed. extType: array(_REQ_)[string], tarType: array(_REQ_)[string, number]","codes":["EL0130A","EL01219"]},{"ok":false,"reason":"Allow array : Do not allow array(_ALL_, _ANY_, _OPT_) type for array(_REQ_). tarType: array(_OPT_)[string, number]","codes":["EL0130A","EL01216"]}],[{"ok":false,"reason":"Allow array: Do not allow array(_ALL_, _ANY_) type for array(_OPT_). tarType: array(_ALL_)","codes":["EL0130A","EL01217"]},{"ok":false,"reason":"Allow array: Do not allow array(_ALL_, _ANY_) type for array(_OPT_). tarType: array(_ANY_)","codes":["EL0130A","EL01217"]},{"ok":true},{"ok":true},{"ok":true},{"ok":false,"reason":"Array element check failed. extType: array(_OPT_)[string], tarType: array(_SEQ_)[string, number]","codes":["EL0130A","EL01219"]},{"ok":false,"reason":"Array element check failed. extType: array(_OPT_)[string], tarType: array(_REQ_)[string, number]","codes":["EL0130A","EL01219"]},{"ok":false,"reason":"Array element check failed. extType: array(_OPT_)[string], tarType: array(_OPT_)[string, number]","codes":["EL0130A","EL01219"]}],[{"ok":false,"reason":"Allow array: Only array(_SEQ_) type is allowed for array(_SEQ_) type. tarType: array(_ALL_)","codes":["EL0130A","EL01213"]},{"ok":false,"reason":"Allow array: Only array(_SEQ_) type is allowed for array(_SEQ_) type. tarType: array(_ANY_)","codes":["EL0130A","EL01213"]},{"ok":false,"reason":"Allow array: Only array(_SEQ_) type is allowed for array(_SEQ_) type. tarType: array(_REQ_)[string]","codes":["EL0130A","EL01213"]},{"ok":false,"reason":"Allow array: Only array(_SEQ_) type is allowed for array(_SEQ_) type. tarType: array(_OPT_)[string]","codes":["EL0130A","EL01213"]},{"ok":true},{"ok":true},{"ok":false,"reason":"Allow array: Only array(_SEQ_) type is allowed for array(_SEQ_) type. tarType: array(_REQ_)[string, number]","codes":["EL0130A","EL01213"]},{"ok":false,"reason":"Allow array: Only array(_SEQ_) type is allowed for array(_SEQ_) type. tarType: array(_OPT_)[string, number]","codes":["EL0130A","EL01213"]}],[{"ok":false,"reason":"Allow array: Only array(_SEQ_) type is allowed for array(_SEQ_) type. tarType: array(_ALL_)","codes":["EL0130A","EL01213"]},{"ok":false,"reason":"Allow array: Only array(_SEQ_) type is allowed for array(_SEQ_) type. tarType: array(_ANY_)","codes":["EL0130A","EL01213"]},{"ok":false,"reason":"Allow array: Only array(_SEQ_) type is allowed for array(_SEQ_) type. tarType: array(_REQ_)[string]","codes":["EL0130A","EL01213"]},{"ok":false,"reason":"Allow array: Only array(_SEQ_) type is allowed for array(_SEQ_) type. tarType: array(_OPT_)[string]","codes":["EL0130A","EL01213"]},{"ok":false,"reason":"Array permit: tarType must be equal to or greater than the length of array(_SEQ_) type of extType.length = 2, target.length = 1","codes":["EL0130A","EL01214"]},{"ok":true},{"ok":false,"reason":"Allow array: Only array(_SEQ_) type is allowed for array(_SEQ_) type. tarType: array(_REQ_)[string, number]","codes":["EL0130A","EL01213"]},{"ok":false,"reason":"Allow array: Only array(_SEQ_) type is allowed for array(_SEQ_) type. tarType: array(_OPT_)[string, number]","codes":["EL0130A","EL01213"]}],[{"ok":false,"reason":"Allow array : Do not allow array(_ALL_, _ANY_, _OPT_) type for array(_REQ_). tarType: array(_ALL_)","codes":["EL0130A","EL01216"]},{"ok":false,"reason":"Allow array : Do not allow array(_ALL_, _ANY_, _OPT_) type for array(_REQ_). tarType: array(_ANY_)","codes":["EL0130A","EL01216"]},{"ok":true},{"ok":false,"reason":"Allow array : Do not allow array(_ALL_, _ANY_, _OPT_) type for array(_REQ_). tarType: array(_OPT_)[string]","codes":["EL0130A","EL01216"]},{"ok":true},{"ok":true},{"ok":true},{"ok":false,"reason":"Allow array : Do not allow array(_ALL_, _ANY_, _OPT_) type for array(_REQ_). tarType: array(_OPT_)[string, number]","codes":["EL0130A","EL01216"]}],[{"ok":false,"reason":"Allow array: Do not allow array(_ALL_, _ANY_) type for array(_OPT_). tarType: array(_ALL_)","codes":["EL0130A","EL01217"]},{"ok":false,"reason":"Allow array: Do not allow array(_ALL_, _ANY_) type for array(_OPT_). tarType: array(_ANY_)","codes":["EL0130A","EL01217"]},{"ok":true},{"ok":true},{"ok":true},{"ok":true},{"ok":true},{"ok":true}]],"note":"S = String · N = Number · SEQ는 선언 길이 이상의 튜플"},{"id":"record","label":"구조체","title":"구조체의 속성 포함·속성 타입 관계","mode":"allow","rows":[{"id":"empty","label":"R0","expr":"{}"},{"id":"name","label":"R1","expr":"{ name: String }"},{"id":"age","label":"R2","expr":"{ name: String, age: Number }"},{"id":"opt","label":"R3","expr":"{ name: [[String]] }"},{"id":"wide","label":"R4","expr":"{ name: [['_REQ_', String, Number]] }"},{"id":"default","label":"R5","expr":"{ name: 'guest' }"}],"cols":[{"id":"empty","label":"R0","expr":"{}"},{"id":"name","label":"R1","expr":"{ name: String }"},{"id":"age","label":"R2","expr":"{ name: String, age: Number }"},{"id":"opt","label":"R3","expr":"{ name: [[String]] }"},{"id":"wide","label":"R4","expr":"{ name: [['_REQ_', String, Number]] }"},{"id":"default","label":"R5","expr":"{ name: 'guest' }"}],"cells":[[{"ok":true},{"ok":true},{"ok":true},{"ok":true},{"ok":true},{"ok":true}],[{"ok":false,"reason":"Union allowed: tarType['name'] key does not exist. extType['name'] = string","codes":["EL0130A","EL01242"]},{"ok":true},{"ok":true},{"ok":false,"reason":"Choice allowed: do not allow choice(_ALL_, _ANY_, _OPT_, _NON_, _ERR_) type for choice(_REQ_). tarType: choice(_OPT_)[string]","codes":["EL0130A","EL01243","EL01226"]},{"ok":false,"reason":"Choice allowed: tarType[1] = number, no extType allowed. extType = choice(_REQ_)[string]","codes":["EL0130A","EL01243","EL0122F"]},{"ok":true}],[{"ok":false,"reason":"Union allowed: tarType['name'] key does not exist. extType['name'] = string","codes":["EL0130A","EL01242"]},{"ok":false,"reason":"Union allowed: tarType['age'] key does not exist. extType['age'] = number","codes":["EL0130A","EL01242"]},{"ok":true},{"ok":false,"reason":"Choice allowed: do not allow choice(_ALL_, _ANY_, _OPT_, _NON_, _ERR_) type for choice(_REQ_). tarType: choice(_OPT_)[string]","codes":["EL0130A","EL01243","EL01226"]},{"ok":false,"reason":"Choice allowed: tarType[1] = number, no extType allowed. extType = choice(_REQ_)[string]","codes":["EL0130A","EL01243","EL0122F"]},{"ok":false,"reason":"Union allowed: tarType['age'] key does not exist. extType['age'] = number","codes":["EL0130A","EL01242"]}],[{"ok":false,"reason":"Union allowed: tarType['name'] key does not exist. extType['name'] = choice","codes":["EL0130A","EL01242"]},{"ok":true},{"ok":true},{"ok":true},{"ok":false,"reason":"Choice allowed: tarType[1] = number, no extType allowed. extType = choice(_OPT_)[string]","codes":["EL0130A","EL01243","EL0122F"]},{"ok":true}],[{"ok":false,"reason":"Union allowed: tarType['name'] key does not exist. extType['name'] = choice","codes":["EL0130A","EL01242"]},{"ok":true},{"ok":true},{"ok":false,"reason":"Choice allowed: do not allow choice(_ALL_, _ANY_, _OPT_, _NON_, _ERR_) type for choice(_REQ_). tarType: choice(_OPT_)[string]","codes":["EL0130A","EL01243","EL01226"]},{"ok":true},{"ok":true}],[{"ok":false,"reason":"Union allowed: tarType['name'] key does not exist. extType['name'] = string","codes":["EL0130A","EL01242"]},{"ok":false,"reason":"Type allowed: different from type 1 literal value. extType = string('guest'), tarType = string","codes":["EL0130A","EL01243","EL01202"]},{"ok":false,"reason":"Type allowed: different from type 1 literal value. extType = string('guest'), tarType = string","codes":["EL0130A","EL01243","EL01202"]},{"ok":false,"reason":"Choice allowed: do not allow choice(_ALL_, _ANY_, _OPT_, _NON_, _ERR_) type for choice(_REQ_). tarType: choice(_OPT_)[string]","codes":["EL0130A","EL01243","EL01226"]},{"ok":false,"reason":"Choice allowed: tarType[0] = string, no extType allowed. extType = choice(_REQ_)[string('guest')]","codes":["EL0130A","EL01243","EL0122F"]},{"ok":true}]],"note":"union = 구조체 · 추가 속성 허용 · 필수 키의 실제 존재도 검사"},{"id":"class","label":"클래스","title":"상속 관계와 생성 후 구조 비교","mode":"allow","rows":[{"id":"a","label":"Animal","expr":"Animal"},{"id":"d","label":"Dog","expr":"Dog"},{"id":"c","label":"Cat","expr":"Cat"},{"id":"s","label":"SimilarDog","expr":"SimilarDog"}],"cols":[{"id":"a","label":"Animal","expr":"Animal"},{"id":"d","label":"Dog","expr":"Dog"},{"id":"c","label":"Cat","expr":"Cat"},{"id":"s","label":"SimilarDog","expr":"SimilarDog"}],"cells":[[{"ok":true},{"ok":true},{"ok":true},{"ok":false,"reason":"Class allowed: class to class denied. (opt = 0)","codes":["EL0130A","EL01232"]}],[{"ok":false,"reason":"Class allowed: class to class denied. (opt = 0)","codes":["EL0130A","EL01232"]},{"ok":true},{"ok":false,"reason":"Class allowed: class to class denied. (opt = 0)","codes":["EL0130A","EL01232"]},{"ok":false,"reason":"Class allowed: class to class denied. (opt = 0)","codes":["EL0130A","EL01232"]}],[{"ok":false,"reason":"Class allowed: class to class denied. (opt = 0)","codes":["EL0130A","EL01232"]},{"ok":false,"reason":"Class allowed: class to class denied. (opt = 0)","codes":["EL0130A","EL01232"]},{"ok":true},{"ok":false,"reason":"Class allowed: class to class denied. (opt = 0)","codes":["EL0130A","EL01232"]}],[{"ok":false,"reason":"Class allowed: class to class denied. (opt = 0)","codes":["EL0130A","EL01232"]},{"ok":false,"reason":"Class allowed: class to class denied. (opt = 0)","codes":["EL0130A","EL01232"]},{"ok":false,"reason":"Class allowed: class to class denied. (opt = 0)","codes":["EL0130A","EL01232"]},{"ok":true}]],"cells1":[[{"ok":true},{"ok":true},{"ok":true},{"ok":true}],[{"ok":false,"reason":"Union allowed: tarType['age'] key does not exist. extType['age'] = number","codes":["EL0130A","EL01231","EL01242"]},{"ok":true},{"ok":false,"reason":"Union allowed: tarType['age'] key does not exist. extType['age'] = number","codes":["EL0130A","EL01231","EL01242"]},{"ok":true}],[{"ok":true},{"ok":true},{"ok":true},{"ok":true}],[{"ok":false,"reason":"Union allowed: tarType['age'] key does not exist. extType['age'] = number","codes":["EL0130A","EL01231","EL01242"]},{"ok":true},{"ok":false,"reason":"Union allowed: tarType['age'] key does not exist. extType['age'] = number","codes":["EL0130A","EL01231","EL01242"]},{"ok":true}]],"note":"Dog·Cat extends Animal · SimilarDog는 상속 없이 Dog와 같은 필드"},{"id":"function","label":"함수","title":"함수 인자·반환의 비교 방향","mode":"allow","rows":[{"id":"f1","label":"f1","expr":"f1 · String → String"},{"id":"f2","label":"f2","expr":"f2 · (String | Number) → String"},{"id":"f3","label":"f3","expr":"f3 · String → (String | Number)"},{"id":"f4","label":"f4","expr":"f4 · (String | Number) → (String | Number)"}],"cols":[{"id":"f1","label":"f1","expr":"f1 · String → String"},{"id":"f2","label":"f2","expr":"f2 · (String | Number) → String"},{"id":"f3","label":"f3","expr":"f3 · String → (String | Number)"},{"id":"f4","label":"f4","expr":"f4 · (String | Number) → (String | Number)"}],"cells":[[{"ok":true},{"ok":false,"reason":"Choice allowed: tarType[1] = number, no extType allowed. extType = choice(_REQ_)[string]","codes":["EL0130A","EL01256","EL01215","EL0122F"]},{"ok":false,"reason":"Choice allowed: tarType[1] = number, no extType allowed. extType = choice(_REQ_)[string]","codes":["EL0130A","EL01257","EL0122F"]},{"ok":false,"reason":"Choice allowed: tarType[1] = number, no extType allowed. extType = choice(_REQ_)[string]","codes":["EL0130A","EL01256","EL01215","EL0122F"]}],[{"ok":true},{"ok":true},{"ok":false,"reason":"Choice allowed: tarType[1] = number, no extType allowed. extType = choice(_REQ_)[string]","codes":["EL0130A","EL01257","EL0122F"]},{"ok":false,"reason":"Choice allowed: tarType[1] = number, no extType allowed. extType = choice(_REQ_)[string]","codes":["EL0130A","EL01257","EL0122F"]}],[{"ok":true},{"ok":false,"reason":"Choice allowed: tarType[1] = number, no extType allowed. extType = choice(_REQ_)[string]","codes":["EL0130A","EL01256","EL01215","EL0122F"]},{"ok":true},{"ok":false,"reason":"Choice allowed: tarType[1] = number, no extType allowed. extType = choice(_REQ_)[string]","codes":["EL0130A","EL01256","EL01215","EL0122F"]}],[{"ok":true},{"ok":true},{"ok":true},{"ok":true}]],"proposal":[[{"ok":true},{"ok":true},{"ok":false},{"ok":false}],[{"ok":false},{"ok":true},{"ok":false},{"ok":false}],[{"ok":true},{"ok":true},{"ok":true},{"ok":true}],[{"ok":false},{"ok":true},{"ok":false},{"ok":true}]],"note":"_TYPE로 선언 · 현재: 인자·반환 같은 방향 · 설계안: 인자 역방향, 반환 같은 방향"},{"id":"match","label":"값 검사","title":"타입 선언과 실제 값의 관계","mode":"match","rows":[{"id":"num","label":"Number","expr":"Number"},{"id":"str","label":"String","expr":"String"},{"id":"bool","label":"Boolean","expr":"Boolean"},{"id":"obj","label":"Object","expr":"Object"},{"id":"array","label":"Array","expr":"Array"},{"id":"record","label":"{}","expr":"{}"},{"id":"all","label":"choice ALL","expr":"[['_ALL_']]"},{"id":"opt","label":"choice OPT","expr":"[[String]]"},{"id":"literal","label":"literal 1","expr":"1"},{"id":"enum","label":"EUM·1","expr":"[['_EUM_', 1]]"},{"id":"tuple","label":"SEQ·Array","expr":"['_SEQ_', Array]"},{"id":"default","label":"default","expr":"{ role: 'user' }"}],"cols":[{"id":"u","label":"undefined","expr":"undefined"},{"id":"null","label":"null","expr":"null"},{"id":"one","label":"1","expr":"1"},{"id":"two","label":"2","expr":"2"},{"id":"s","label":"'A'","expr":"'A'"},{"id":"bool","label":"true","expr":"true"},{"id":"obj","label":"{}","expr":"{}"},{"id":"date","label":"Date","expr":"new Date(0)"},{"id":"arr","label":"[1]","expr":"[1]"},{"id":"nested","label":"[[1,2]]","expr":"[[1, 2]]"},{"id":"reserved","label":"['_X_']","expr":"['_CUSTOM_']"},{"id":"key","label":"$type","expr":"{ $type: 'custom' }"},{"id":"error","label":"Error","expr":"new Error('sample')"}],"cells":[[{"ok":false,"reason":"Type match : target is not type 'number'. tarType : undefined","codes":["EL0130B","EL01102"]},{"ok":false,"reason":"Type match : target is not type 'number'. tarType : null","codes":["EL0130B","EL01102"]},{"ok":true},{"ok":true},{"ok":false,"reason":"Type match : target is not type 'number'. tarType : string('A')","codes":["EL0130B","EL01102"]},{"ok":false,"reason":"Type match : target is not type 'number'. tarType : boolean(true)","codes":["EL0130B","EL01102"]},{"ok":false,"reason":"Type match : target is not type 'number'. tarType : union","codes":["EL0130B","EL01102"]},{"ok":false,"reason":"Type match : target is not type 'number'. tarType : object","codes":["EL0130B","EL01102"]},{"ok":false,"reason":"Type match : target is not type 'number'. tarType : array(_OPT_)[number(1)]","codes":["EL0130B","EL01102"]},{"ok":false,"reason":"Type match : target is not type 'number'. tarType : choice(_OPT_)[number(1), number(2)]","codes":["EL0130B","EL01102"]},{"ok":false,"reason":"Type check: array(_CUSTOM_) type is a type that cannot be handled","codes":["EL0130B","EL01307"]},{"ok":false,"reason":"Type check: [custom] is a special type to handle","codes":["EL0130B","EL01304"]},{"ok":false,"reason":"Type match : target is not type 'number'. tarType : union","codes":["EL0130B","EL01102"]}],[{"ok":false,"reason":"Type match : target is not type 'string'. tarType : undefined","codes":["EL0130B","EL01102"]},{"ok":false,"reason":"Type match : target is not type 'string'. tarType : null","codes":["EL0130B","EL01102"]},{"ok":false,"reason":"Type match : target is not type 'string'. tarType : number(1)","codes":["EL0130B","EL01102"]},{"ok":false,"reason":"Type match : target is not type 'string'. tarType : number(2)","codes":["EL0130B","EL01102"]},{"ok":true},{"ok":false,"reason":"Type match : target is not type 'string'. tarType : boolean(true)","codes":["EL0130B","EL01102"]},{"ok":false,"reason":"Type match : target is not type 'string'. tarType : union","codes":["EL0130B","EL01102"]},{"ok":false,"reason":"Type match : target is not type 'string'. tarType : object","codes":["EL0130B","EL01102"]},{"ok":false,"reason":"Type match : target is not type 'string'. tarType : array(_OPT_)[number(1)]","codes":["EL0130B","EL01102"]},{"ok":false,"reason":"Type match : target is not type 'string'. tarType : choice(_OPT_)[number(1), number(2)]","codes":["EL0130B","EL01102"]},{"ok":false,"reason":"Type check: array(_CUSTOM_) type is a type that cannot be handled","codes":["EL0130B","EL01307"]},{"ok":false,"reason":"Type check: [custom] is a special type to handle","codes":["EL0130B","EL01304"]},{"ok":false,"reason":"Type match : target is not type 'string'. tarType : union","codes":["EL0130B","EL01102"]}],[{"ok":false,"reason":"Type match : target is not type 'boolean'. tarType : undefined","codes":["EL0130B","EL01102"]},{"ok":false,"reason":"Type match : target is not type 'boolean'. tarType : null","codes":["EL0130B","EL01102"]},{"ok":false,"reason":"Type match : target is not type 'boolean'. tarType : number(1)","codes":["EL0130B","EL01102"]},{"ok":false,"reason":"Type match : target is not type 'boolean'. tarType : number(2)","codes":["EL0130B","EL01102"]},{"ok":false,"reason":"Type match : target is not type 'boolean'. tarType : string('A')","codes":["EL0130B","EL01102"]},{"ok":true},{"ok":false,"reason":"Type match : target is not type 'boolean'. tarType : union","codes":["EL0130B","EL01102"]},{"ok":false,"reason":"Type match : target is not type 'boolean'. tarType : object","codes":["EL0130B","EL01102"]},{"ok":false,"reason":"Type match : target is not type 'boolean'. tarType : array(_OPT_)[number(1)]","codes":["EL0130B","EL01102"]},{"ok":false,"reason":"Type match : target is not type 'boolean'. tarType : choice(_OPT_)[number(1), number(2)]","codes":["EL0130B","EL01102"]},{"ok":false,"reason":"Type check: array(_CUSTOM_) type is a type that cannot be handled","codes":["EL0130B","EL01307"]},{"ok":false,"reason":"Type check: [custom] is a special type to handle","codes":["EL0130B","EL01304"]},{"ok":false,"reason":"Type match : target is not type 'boolean'. tarType : union","codes":["EL0130B","EL01102"]}],[{"ok":false,"reason":"Type match : target is not type 'object'. tarType : undefined","codes":["EL0130B","EL01102"]},{"ok":false,"reason":"Type match : target is not type 'object'. tarType : null","codes":["EL0130B","EL01102"]},{"ok":false,"reason":"Type match : target is not type 'object'. tarType : number(1)","codes":["EL0130B","EL01102"]},{"ok":false,"reason":"Type match : target is not type 'object'. tarType : number(2)","codes":["EL0130B","EL01102"]},{"ok":false,"reason":"Type match : target is not type 'object'. tarType : string('A')","codes":["EL0130B","EL01102"]},{"ok":false,"reason":"Type match : target is not type 'object'. tarType : boolean(true)","codes":["EL0130B","EL01102"]},{"ok":false,"reason":"Type match : target is not type 'object'. tarType : union","codes":["EL0130B","EL01102"]},{"ok":true},{"ok":false,"reason":"Type match : target is not type 'object'. tarType : array(_OPT_)[number(1)]","codes":["EL0130B","EL01102"]},{"ok":false,"reason":"Type match : target is not type 'object'. tarType : choice(_OPT_)[number(1), number(2)]","codes":["EL0130B","EL01102"]},{"ok":false,"reason":"Type check: array(_CUSTOM_) type is a type that cannot be handled","codes":["EL0130B","EL01307"]},{"ok":false,"reason":"Type check: [custom] is a special type to handle","codes":["EL0130B","EL01304"]},{"ok":false,"reason":"Type match : target is not type 'object'. tarType : union","codes":["EL0130B","EL01102"]}],[{"ok":false,"reason":"Array match: target is not array type. tarType: undefined","codes":["EL0130B","EL01111"]},{"ok":false,"reason":"Array match: target is not array type. tarType: null","codes":["EL0130B","EL01111"]},{"ok":false,"reason":"Array match: target is not array type. tarType: number(1)","codes":["EL0130B","EL01111"]},{"ok":false,"reason":"Array match: target is not array type. tarType: number(2)","codes":["EL0130B","EL01111"]},{"ok":false,"reason":"Array match: target is not array type. tarType: string('A')","codes":["EL0130B","EL01111"]},{"ok":false,"reason":"Array match: target is not array type. tarType: boolean(true)","codes":["EL0130B","EL01111"]},{"ok":false,"reason":"Array match: target is not array type. tarType: union","codes":["EL0130B","EL01111"]},{"ok":false,"reason":"Array match: target is not array type. tarType: object","codes":["EL0130B","EL01111"]},{"ok":true},{"ok":true},{"ok":false,"reason":"Type check: array(_CUSTOM_) type is a type that cannot be handled","codes":["EL0130B","EL01307"]},{"ok":false,"reason":"Type check: [custom] is a special type to handle","codes":["EL0130B","EL01304"]},{"ok":false,"reason":"Array match: target is not array type. tarType: union","codes":["EL0130B","EL01111"]}],[{"ok":false,"reason":"Union match: target is not union type. tarType: undefined","codes":["EL0130B","EL01141"]},{"ok":false,"reason":"Union match: target is not union type. tarType: null","codes":["EL0130B","EL01141"]},{"ok":false,"reason":"Union match: target is not union type. tarType: number(1)","codes":["EL0130B","EL01141"]},{"ok":false,"reason":"Union match: target is not union type. tarType: number(2)","codes":["EL0130B","EL01141"]},{"ok":false,"reason":"Union match: target is not union type. tarType: string('A')","codes":["EL0130B","EL01141"]},{"ok":false,"reason":"Union match: target is not union type. tarType: boolean(true)","codes":["EL0130B","EL01141"]},{"ok":true},{"ok":false,"reason":"Union match: target is not union type. tarType: object","codes":["EL0130B","EL01141"]},{"ok":false,"reason":"Union match: target is not union type. tarType: array(_OPT_)[number(1)]","codes":["EL0130B","EL01141"]},{"ok":false,"reason":"Union match: target is not union type. tarType: choice(_OPT_)[number(1), number(2)]","codes":["EL0130B","EL01141"]},{"ok":false,"reason":"Type check: array(_CUSTOM_) type is a type that cannot be handled","codes":["EL0130B","EL01307"]},{"ok":false,"reason":"Type check: [custom] is a special type to handle","codes":["EL0130B","EL01304"]},{"ok":true}],[{"ok":true},{"ok":true},{"ok":true},{"ok":true},{"ok":true},{"ok":true},{"ok":true},{"ok":true},{"ok":true},{"ok":true},{"ok":false,"reason":"Type check: array(_CUSTOM_) type is a type that cannot be handled","codes":["EL0130B","EL01307"]},{"ok":false,"reason":"Type check: [custom] is a special type to handle","codes":["EL0130B","EL01304"]},{"ok":true}],[{"ok":true},{"ok":false,"reason":"Choice match: choice detailed type check failed. extType: choice(_OPT_)[string], tarType: null","codes":["EL0130B","EL01127"]},{"ok":false,"reason":"Choice match: choice detailed type check failed. extType: choice(_OPT_)[string], tarType: number(1)","codes":["EL0130B","EL01127"]},{"ok":false,"reason":"Choice match: choice detailed type check failed. extType: choice(_OPT_)[string], tarType: number(2)","codes":["EL0130B","EL01127"]},{"ok":true},{"ok":false,"reason":"Choice match: choice detailed type check failed. extType: choice(_OPT_)[string], tarType: boolean(true)","codes":["EL0130B","EL01127"]},{"ok":false,"reason":"Choice match: choice detailed type check failed. extType: choice(_OPT_)[string], tarType: union","codes":["EL0130B","EL01127"]},{"ok":false,"reason":"Choice match: choice detailed type check failed. extType: choice(_OPT_)[string], tarType: object","codes":["EL0130B","EL01127"]},{"ok":false,"reason":"Choice match: choice detailed type check failed. extType: choice(_OPT_)[string], tarType: array(_OPT_)[number(1)]","codes":["EL0130B","EL01127"]},{"ok":false,"reason":"Choice match: choice detailed type check failed. extType: choice(_OPT_)[string], tarType: choice(_OPT_)[number(1), number(2)]","codes":["EL0130B","EL01127"]},{"ok":false,"reason":"Type check: array(_CUSTOM_) type is a type that cannot be handled","codes":["EL0130B","EL01307"]},{"ok":false,"reason":"Type check: [custom] is a special type to handle","codes":["EL0130B","EL01304"]},{"ok":false,"reason":"Choice match: choice detailed type check failed. extType: choice(_OPT_)[string], tarType: union","codes":["EL0130B","EL01127"]}],[{"ok":true},{"ok":false,"reason":"Type match : target is not type 'number'. tarType : null","codes":["EL0130B","EL01102"]},{"ok":true},{"ok":true},{"ok":false,"reason":"Type match : target is not type 'number'. tarType : string('A')","codes":["EL0130B","EL01102"]},{"ok":false,"reason":"Type match : target is not type 'number'. tarType : boolean(true)","codes":["EL0130B","EL01102"]},{"ok":false,"reason":"Type match : target is not type 'number'. tarType : union","codes":["EL0130B","EL01102"]},{"ok":false,"reason":"Type match : target is not type 'number'. tarType : object","codes":["EL0130B","EL01102"]},{"ok":false,"reason":"Type match : target is not type 'number'. tarType : array(_OPT_)[number(1)]","codes":["EL0130B","EL01102"]},{"ok":false,"reason":"Type match : target is not type 'number'. tarType : choice(_OPT_)[number(1), number(2)]","codes":["EL0130B","EL01102"]},{"ok":false,"reason":"Type check: array(_CUSTOM_) type is a type that cannot be handled","codes":["EL0130B","EL01307"]},{"ok":false,"reason":"Type check: [custom] is a special type to handle","codes":["EL0130B","EL01304"]},{"ok":false,"reason":"Type match : target is not type 'number'. tarType : union","codes":["EL0130B","EL01102"]}],[{"ok":false,"reason":"Choice match: choice detailed type check failed. extType: choice(_EUM_)[number(1)], tarType: undefined","codes":["EL0130B","EL01127"]},{"ok":false,"reason":"Choice match: choice detailed type check failed. extType: choice(_EUM_)[number(1)], tarType: null","codes":["EL0130B","EL01127"]},{"ok":true},{"ok":false,"reason":"Choice match: choice detailed type check failed. extType: choice(_EUM_)[number(1)], tarType: number(2)","codes":["EL0130B","EL01127"]},{"ok":false,"reason":"Choice match: choice detailed type check failed. extType: choice(_EUM_)[number(1)], tarType: string('A')","codes":["EL0130B","EL01127"]},{"ok":false,"reason":"Choice match: choice detailed type check failed. extType: choice(_EUM_)[number(1)], tarType: boolean(true)","codes":["EL0130B","EL01127"]},{"ok":false,"reason":"Choice match: choice detailed type check failed. extType: choice(_EUM_)[number(1)], tarType: union","codes":["EL0130B","EL01127"]},{"ok":false,"reason":"Choice match: choice detailed type check failed. extType: choice(_EUM_)[number(1)], tarType: object","codes":["EL0130B","EL01127"]},{"ok":false,"reason":"Choice match: choice detailed type check failed. extType: choice(_EUM_)[number(1)], tarType: array(_OPT_)[number(1)]","codes":["EL0130B","EL01127"]},{"ok":false,"reason":"Choice match: choice detailed type check failed. extType: choice(_EUM_)[number(1)], tarType: choice(_OPT_)[number(1), number(2)]","codes":["EL0130B","EL01127"]},{"ok":false,"reason":"Type check: array(_CUSTOM_) type is a type that cannot be handled","codes":["EL0130B","EL01307"]},{"ok":false,"reason":"Type check: [custom] is a special type to handle","codes":["EL0130B","EL01304"]},{"ok":false,"reason":"Choice match: choice detailed type check failed. extType: choice(_EUM_)[number(1)], tarType: union","codes":["EL0130B","EL01127"]}],[{"ok":false,"reason":"Array match: target is not array type. tarType: undefined","codes":["EL0130B","EL01111"]},{"ok":false,"reason":"Array match: target is not array type. tarType: null","codes":["EL0130B","EL01111"]},{"ok":false,"reason":"Array match: target is not array type. tarType: number(1)","codes":["EL0130B","EL01111"]},{"ok":false,"reason":"Array match: target is not array type. tarType: number(2)","codes":["EL0130B","EL01111"]},{"ok":false,"reason":"Array match: target is not array type. tarType: string('A')","codes":["EL0130B","EL01111"]},{"ok":false,"reason":"Array match: target is not array type. tarType: boolean(true)","codes":["EL0130B","EL01111"]},{"ok":false,"reason":"Array match: target is not array type. tarType: union","codes":["EL0130B","EL01111"]},{"ok":false,"reason":"Array match: target is not array type. tarType: object","codes":["EL0130B","EL01111"]},{"ok":false,"reason":"Array match: target is not array type. tarType: number(1)","codes":["EL0130B","EL01115","EL01111"]},{"ok":false,"reason":"Array match: target is not array type. tarType: number(1)","codes":["EL0130B","EL01115","EL01111"]},{"ok":false,"reason":"Type check: array(_CUSTOM_) type is a type that cannot be handled","codes":["EL0130B","EL01307"]},{"ok":false,"reason":"Type check: [custom] is a special type to handle","codes":["EL0130B","EL01304"]},{"ok":false,"reason":"Array match: target is not array type. tarType: union","codes":["EL0130B","EL01111"]}],[{"ok":false,"reason":"Union match: target is not union type. tarType: undefined","codes":["EL0130B","EL01141"]},{"ok":false,"reason":"Union match: target is not union type. tarType: null","codes":["EL0130B","EL01141"]},{"ok":false,"reason":"Union match: target is not union type. tarType: number(1)","codes":["EL0130B","EL01141"]},{"ok":false,"reason":"Union match: target is not union type. tarType: number(2)","codes":["EL0130B","EL01141"]},{"ok":false,"reason":"Union match: target is not union type. tarType: string('A')","codes":["EL0130B","EL01141"]},{"ok":false,"reason":"Union match: target is not union type. tarType: boolean(true)","codes":["EL0130B","EL01141"]},{"ok":true,"changed":true},{"ok":false,"reason":"Union match: target is not union type. tarType: object","codes":["EL0130B","EL01141"]},{"ok":false,"reason":"Union match: target is not union type. tarType: array(_OPT_)[number(1)]","codes":["EL0130B","EL01141"]},{"ok":false,"reason":"Union match: target is not union type. tarType: choice(_OPT_)[number(1), number(2)]","codes":["EL0130B","EL01141"]},{"ok":false,"reason":"Type check: array(_CUSTOM_) type is a type that cannot be handled","codes":["EL0130B","EL01307"]},{"ok":false,"reason":"Type check: [custom] is a special type to handle","codes":["EL0130B","EL01304"]},{"ok":true,"changed":true}]],"note":"타입 간 allow와 별개인 match 결과 · *는 검사 도중 입력 변경"}],"count":564,"graph":{"nodes":[{"id":"s","label":"String","expr":"String"},{"id":"n","label":"Number","expr":"Number"},{"id":"req","label":"REQ · S | N","expr":"[['_REQ_', String, Number]]"},{"id":"u","label":"undefined","expr":"undefined"},{"id":"opt","label":"OPT · S | N","expr":"[[String, Number]]"},{"id":"all","label":"ALL","expr":"[['_ALL_']]"},{"id":"err","label":"ERR","expr":"[['_ERR_']]"}],"links":[{"from":"s","to":"req","ok":true},{"from":"n","to":"req","ok":true},{"from":"req","to":"opt","ok":true},{"from":"u","to":"opt","ok":true},{"from":"opt","to":"all","ok":true},{"from":"err","to":"all","ok":false}]}}
+</script>
+<script>
+(() => {
+  const root = document.getElementById('logic-type-compatibility');
+  const data = JSON.parse(document.getElementById('ltc-data').textContent);
+  const tabs = root.querySelector('#ltc-tabs');
+  const panels = root.querySelector('#ltc-panels');
+  const ns = 'http://www.w3.org/2000/svg';
+  const viewIds = ['overview'].concat(data.views.map(view => view.id));
+  let state = { view: 'overview', opt: 0, cells: {}, edge: 1 };
+  const details = {};
+
+  function el(tag, className, text) {
+    const item = document.createElement(tag);
+    if (className) item.className = className;
+    if (text !== undefined) item.textContent = text;
+    return item;
+  }
+
+  function readState(saved) {
+    const candidate = saved && saved.privateContent ? saved.privateContent : saved;
+    if (!candidate || candidate.kind !== 'logic-type-compatibility-v1') return;
+    if (viewIds.indexOf(candidate.view) >= 0) state.view = candidate.view;
+    state.opt = candidate.opt === 1 ? 1 : 0;
+    state.edge = Number.isInteger(candidate.edge) && candidate.edge >= 0 && candidate.edge < data.graph.links.length ? candidate.edge : 1;
+    state.cells = candidate.cells && typeof candidate.cells === 'object' ? candidate.cells : {};
+  }
+
+  function persist() {
+    const view = data.views.find(item => item.id === state.view);
+    const selection = view ? cellSelection(view) : null;
+    const pair = view && selection ? {
+      required: view.rows[selection[0]].expr,
+      candidate: view.cols[selection[1]].expr
+    } : null;
+    if (window.openai && typeof window.openai.setWidgetState === 'function') {
+      window.openai.setWidgetState({
+        modelContent: { perspective: state.view, opt: state.opt, pair },
+        privateContent: { kind: 'logic-type-compatibility-v1', view: state.view, opt: state.opt, cells: state.cells, edge: state.edge }
+      }).catch(() => {});
+    }
+  }
+
+  function makePanel(id, label) {
+    const button = el('button', 'nav-link', label);
+    button.id = 'ltc-tab-' + id;
+    button.type = 'button';
+    button.setAttribute('role', 'tab');
+    button.setAttribute('aria-controls', 'ltc-panel-' + id);
+    button.setAttribute('aria-selected', 'false');
+    button.dataset.view = id;
+    tabs.append(button);
+    const panel = el('div', 'compat-stack');
+    panel.id = 'ltc-panel-' + id;
+    panel.setAttribute('role', 'tabpanel');
+    panel.setAttribute('aria-labelledby', button.id);
+    panel.hidden = true;
+    panels.append(panel);
+    return panel;
+  }
+
+  function applyTabs() {
+    viewIds.forEach(id => {
+      const active = state.view === id;
+      const button = root.querySelector('#ltc-tab-' + id);
+      button.classList.toggle('active', active);
+      button.setAttribute('aria-selected', String(active));
+      root.querySelector('#ltc-panel-' + id).hidden = !active;
+    });
+  }
+
+  function detailBox(panel) {
+    const box = el('div', 'card');
+    const content = el('div', 'compat-detail');
+    content.setAttribute('aria-live', 'polite');
+    box.append(content);
+    panel.append(box);
+    return content;
+  }
+
+  function legend(panel, functionView) {
+    const line = el('div', 'compat-legend text-small');
+    [['compat-yes', '✓ 허용'], ['compat-no', '× 거부']].forEach(([className, label]) => {
+      const part = el('span');
+      const swatch = el('span', 'compat-swatch ' + className);
+      swatch.setAttribute('aria-hidden', 'true');
+      part.append(swatch, document.createTextNode(label));
+      line.append(part);
+    });
+    if (functionView) {
+      const part = el('span');
+      const swatch = el('span', 'compat-swatch compat-different');
+      swatch.setAttribute('aria-hidden', 'true');
+      part.append(swatch, document.createTextNode('현재와 설계안이 다른 관계'));
+      line.append(part);
+    }
+    panel.append(line);
+  }
+
+  function cellSelection(view) {
+    const pair = state.cells[view.id];
+    if (Array.isArray(pair) && Number.isInteger(pair[0]) && Number.isInteger(pair[1])
+      && pair[0] >= 0 && pair[0] < view.rows.length && pair[1] >= 0 && pair[1] < view.cols.length) return pair;
+    const initial = {
+      family: [3, 13], choice: [0, 3], array: [3, 2], record: [1, 2], class: [0, 1],
+      function: [1, 0], match: [4, 10]
+    };
+    return initial[view.id] || [0, 0];
+  }
+
+  function currentCells(view) {
+    return view.id === 'class' && state.opt === 1 ? view.cells1 : view.cells;
+  }
+
+  function updateDetail(view) {
+    const [row, col] = cellSelection(view);
+    const expected = view.rows[row];
+    const target = view.cols[col];
+    const result = currentCells(view)[row][col];
+    const content = details[view.id];
+    content.replaceChildren();
+    const status = el('div', 'viz-row');
+    status.append(
+      el('span', 'viz-badge', result.ok ? '✓ 허용' : '× 거부'),
+      el('code', '', view.mode === 'match' ? 'isMatchType(A, value)' : 'isAllowType(A, B' + (view.id === 'class' ? ', ' + state.opt : '') + ')'),
+      el('span', '', '→ ' + String(result.ok))
+    );
+    if (view.proposal) {
+      const proposed = view.proposal[row][col].ok;
+      status.append(el('span', 'text-small', '치환 설계안: ' + (proposed ? '✓ true' : '× false')));
+    }
+    content.append(status);
+    content.append(el('div', 'compat-expression', 'A · 요구 타입: ' + expected.expr));
+    content.append(el('div', 'compat-expression', (view.mode === 'match' ? 'value · 실제 값: ' : 'B · 비교 대상: ') + target.expr));
+    if (result.codes) {
+      content.append(el('div', 'text-small text-muted compat-expression', result.codes.join(' → ')));
+    }
+    if (result.changed) content.append(el('div', 'text-small', '* 입력 객체에 기본값이 기록됨'));
+    if (view.id === 'function' && result.ok !== view.proposal[row][col].ok) {
+      content.append(el('div', 'text-small', '비교 차이: 매개변수의 허용 방향'));
+    }
+    root.querySelectorAll('[data-matrix="' + view.id + '"]').forEach(button => {
+      button.setAttribute('aria-pressed', String(Number(button.dataset.row) === row && Number(button.dataset.col) === col));
+    });
+  }
+
+  function makeMatrix(view, cells, label, proposed) {
+    const container = el('div', 'compat-stack');
+    if (label) container.append(el('h3', '', label));
+    const scroll = el('div', 'table-responsive');
+    const table = el('table', 'table table-sm');
+    const caption = el('caption', 'sr-only', view.title + ' — 행: 요구 타입 A, 열: 비교 대상 B. ✓ 허용, × 거부.');
+    table.append(caption);
+    const head = el('thead');
+    const headRow = el('tr');
+    headRow.append(el('th', 'text-nowrap', 'A ↓ / B →'));
+    view.cols.forEach((item, col) => {
+      const th = el('th', 'text-center text-nowrap', 'B' + (col + 1));
+      th.scope = 'col';
+      th.setAttribute('data-tooltip', item.expr);
+      headRow.append(th);
+    });
+    head.append(headRow);
+    table.append(head);
+    const body = el('tbody');
+    view.rows.forEach((expected, row) => {
+      const tr = el('tr');
+      const th = el('th', 'text-nowrap', expected.label);
+      th.scope = 'row';
+      th.setAttribute('data-tooltip', expected.expr);
+      tr.append(th);
+      view.cols.forEach((target, col) => {
+        const result = cells[row][col];
+        const td = el('td', 'text-center ' + (result.ok ? 'compat-yes' : 'compat-no'));
+        if (view.proposal && view.cells[row][col].ok !== view.proposal[row][col].ok) td.classList.add('compat-different');
+        const symbol = (result.ok ? '✓' : '×') + (result.changed ? '*' : '');
+        const button = el('button', 'btn btn-ghost viz-tile', symbol);
+        button.type = 'button';
+        button.dataset.matrix = view.id;
+        button.dataset.row = String(row);
+        button.dataset.col = String(col);
+        button.setAttribute('aria-pressed', 'false');
+        button.setAttribute('aria-label', (proposed ? '설계안: ' : '') + expected.expr + ' 타입이 ' + target.expr + (result.ok ? '를 허용' : '를 거부'));
+        button.setAttribute('data-tooltip', 'B' + (col + 1) + ' ' + target.expr + ' → ' + expected.expr + ': ' + (result.ok ? '허용' : '거부'));
+        td.append(button);
+        tr.append(td);
+      });
+      body.append(tr);
+    });
+    table.append(body);
+    scroll.append(table);
+    container.append(scroll);
+    return container;
+  }
+
+  const overview = makePanel('overview', '포함 방향');
+  overview.append(el('h3', '', '대표 choice의 허용 방향'));
+  overview.append(el('div', 'text-small', '화살표 B → A: 요구 타입 A가 비교 대상 B를 허용'));
+  const graphDetail = detailBox(overview);
+  const graphControls = el('div', 'viz-controls');
+  const graphLabel = el('label', 'form-label', '관계');
+  const graphSelect = el('select', 'form-select');
+  graphSelect.setAttribute('aria-label', '확인할 허용 방향');
+  data.graph.links.forEach((link, index) => {
+    const source = data.graph.nodes.find(node => node.id === link.from);
+    const target = data.graph.nodes.find(node => node.id === link.to);
+    const option = el('option', '', source.label + ' → ' + target.label);
+    option.value = String(index);
+    graphSelect.append(option);
+  });
+  graphLabel.append(graphSelect);
+  graphControls.append(graphLabel);
+  overview.append(graphControls);
+  const graph = document.createElementNS(ns, 'svg');
+  graph.classList.add('compat-graph');
+  graph.setAttribute('role', 'img');
+  graph.setAttribute('aria-label', 'String과 Number는 REQ 선택으로, REQ와 undefined는 OPT 선택으로 허용된다. ALL은 OPT를 허용하고 ERR 선택은 거부한다.');
+  overview.append(graph);
+  legend(overview, false);
+  overview.append(el('div', 'text-small text-muted', 'S = String · N = Number · ALL/REQ/OPT/ERR는 choice kind · 생략한 직접 관계 있음'));
+
+  function svgEl(tag, attrs, text) {
+    const item = document.createElementNS(ns, tag);
+    Object.entries(attrs || {}).forEach(([key, value]) => item.setAttribute(key, String(value)));
+    if (text !== undefined) item.textContent = text;
+    return item;
+  }
+
+  function drawGraph() {
+    const width = Math.max(280, graph.getBoundingClientRect().width);
+    const height = 354;
+    graph.setAttribute('viewBox', '0 0 ' + width + ' ' + height);
+    graph.setAttribute('height', String(height));
+    graph.replaceChildren();
+    const defs = svgEl('defs');
+    ['yes', 'no'].forEach((status, index) => {
+      const marker = svgEl('marker', { id: 'ltc-arrow-' + status, viewBox: '0 0 10 10', refX: 9, refY: 5, markerWidth: 6, markerHeight: 6, orient: 'auto-start-reverse' });
+      marker.append(svgEl('path', { d: 'M 0 0 L 10 5 L 0 10 Z', fill: 'var(--viz-series-' + (index + 1) + ')' }));
+      defs.append(marker);
+    });
+    graph.append(defs);
+    const left = width * 0.25;
+    const right = width * 0.75;
+    const nodeWidth = Math.min(156, width * 0.4);
+    const halfWidth = nodeWidth / 2;
+    const pos = { all:[left,30], err:[right,30], opt:[left,126], req:[left,222], u:[right,222], s:[left,318], n:[right,318] };
+    data.graph.links.forEach((link, index) => {
+      const from = pos[link.from];
+      const to = pos[link.to];
+      const horizontal = from[1] === to[1];
+      const start = horizontal ? [from[0] - halfWidth, from[1]] : [from[0], from[1] - 20];
+      const end = horizontal ? [to[0] + halfWidth + 2, to[1]] : [to[0], to[1] + 22];
+      const path = svgEl('path', { d: 'M ' + start[0] + ' ' + start[1] + ' L ' + end[0] + ' ' + end[1], class: 'graph-edge ' + (link.ok ? 'graph-allowed' : 'graph-blocked'), 'marker-end':'url(#ltc-arrow-' + (link.ok ? 'yes' : 'no') + ')', opacity: index === state.edge ? 1 : 0.5 });
+      graph.append(path);
+      const cx = (start[0] + end[0]) / 2;
+      const cy = (start[1] + end[1]) / 2;
+      graph.append(svgEl('rect', { x:cx-10, y:cy-10, width:20, height:20, rx:10, class:'graph-label-bg' }));
+      graph.append(svgEl('text', { x:cx, y:cy+4, 'text-anchor':'middle' }, link.ok ? '✓' : '×'));
+    });
+    data.graph.nodes.forEach(node => {
+      const [x, y] = pos[node.id];
+      graph.append(svgEl('rect', { x:x-halfWidth, y:y-19, width:nodeWidth, height:38, rx:5, class:'graph-node' }));
+      graph.append(svgEl('text', { x, y:y+4, 'text-anchor':'middle' }, node.label));
+    });
+    const selected = data.graph.links[state.edge];
+    const source = data.graph.nodes.find(node => node.id === selected.from);
+    const target = data.graph.nodes.find(node => node.id === selected.to);
+    graphDetail.replaceChildren(
+      el('div', '', source.label + ' → ' + target.label + ' · ' + (selected.ok ? '✓ 허용' : '× 거부')),
+      el('code', 'compat-expression', 'isAllowType(' + target.expr + ', ' + source.expr + ') → ' + String(selected.ok))
+    );
+    graphSelect.value = String(state.edge);
+  }
+
+  const classMatrices = {};
+  data.views.forEach(view => {
+    const panel = makePanel(view.id, view.label);
+    panel.append(el('h3', '', view.title));
+    panel.append(el('div', 'text-small', view.mode === 'match' ? '행 A: 요구 타입 · 열 B: 실제 값' : '행 A: 요구 타입 · 열 B: 비교 대상 타입'));
+    details[view.id] = detailBox(panel);
+    if (view.id === 'class') {
+      const controls = el('div', 'viz-controls');
+      const label = el('label', 'form-label', '클래스 비교 방식');
+      const select = el('select', 'form-select');
+      select.id = 'ltc-class-option';
+      [['0','opt=0 · 상속 관계'],['1','opt=1 · 생성 후 구조 비교 허용']].forEach(([value,text]) => {
+        const option = el('option', '', text);
+        option.value = value;
+        select.append(option);
+      });
+      label.append(select);
+      controls.append(label);
+      panel.append(controls);
+      const slot = el('div');
+      slot.append(makeMatrix(view, currentCells(view)));
+      classMatrices.slot = slot;
+      classMatrices.select = select;
+      panel.append(slot);
+    } else if (view.proposal) {
+      const comparison = el('div', 'compat-comparison');
+      comparison.append(makeMatrix(view, view.cells, '현재 동작', false), makeMatrix(view, view.proposal, '치환 설계안 · 미적용', true));
+      panel.append(comparison);
+    } else {
+      panel.append(makeMatrix(view, view.cells));
+    }
+    legend(panel, Boolean(view.proposal));
+    const keys = el('div', 'compat-keys text-small');
+    view.cols.forEach((column, index) => {
+      const part = el('span', 'compat-key');
+      part.append(el('code', '', 'B' + (index + 1)), el('span', '', column.expr));
+      keys.append(part);
+    });
+    panel.append(keys);
+    panel.append(el('div', 'text-small text-muted', view.note));
+  });
+
+  function refresh() {
+    applyTabs();
+    classMatrices.select.value = String(state.opt);
+    const view = data.views.find(item => item.id === 'class');
+    classMatrices.slot.replaceChildren(makeMatrix(view, currentCells(view)));
+    data.views.forEach(updateDetail);
+    drawGraph();
+  }
+
+  root.addEventListener('click', event => {
+    const tab = event.target.closest('[data-view]');
+    if (tab) {
+      state.view = tab.dataset.view;
+      persist();
+      if (state.view === 'overview') requestAnimationFrame(drawGraph);
+      return;
+    }
+    const cell = event.target.closest('[data-matrix]');
+    if (!cell) return;
+    const view = data.views.find(item => item.id === cell.dataset.matrix);
+    state.cells[view.id] = [Number(cell.dataset.row), Number(cell.dataset.col)];
+    updateDetail(view);
+    persist();
+  });
+  tabs.addEventListener('keydown', () => {
+    requestAnimationFrame(() => {
+      const active = tabs.querySelector('[aria-selected="true"]');
+      if (!active || active.dataset.view === state.view) return;
+      state.view = active.dataset.view;
+      if (state.view === 'overview') drawGraph();
+      persist();
+    });
+  });
+  classMatrices.select.addEventListener('change', () => {
+    state.opt = Number(classMatrices.select.value);
+    const view = data.views.find(item => item.id === 'class');
+    classMatrices.slot.replaceChildren(makeMatrix(view, currentCells(view)));
+    updateDetail(view);
+    persist();
+  });
+  graphSelect.addEventListener('change', () => {
+    state.edge = Number(graphSelect.value);
+    drawGraph();
+    persist();
+  });
+  window.addEventListener('openai:set_globals', event => {
+    const globals = event.detail && event.detail.globals;
+    if (globals && globals.widgetState) {
+      readState(globals.widgetState);
+      refresh();
+    }
+  });
+  readState(window.openai && window.openai.widgetState);
+  refresh();
+  new ResizeObserver(() => { if (state.view === 'overview') drawGraph(); }).observe(graph);
+})();
+</script>
